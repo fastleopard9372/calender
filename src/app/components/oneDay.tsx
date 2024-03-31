@@ -2,7 +2,7 @@
 import React from 'react'
 import { IconButton, Flex, Box } from '@radix-ui/themes'
 import moment from 'moment'
-import TOneDay from '../type'
+import TOneDay, { TPlan } from '../type'
 const OneDay = (prop: TOneDay) => {
   const { no, date, month, datesCnt, plan, width, color } = prop;
   let cornerL = <></>
@@ -87,9 +87,20 @@ const OneDay = (prop: TOneDay) => {
       borderTop: 'none',
     }}></Box>
   }
+  console.log(date.format("YYYY-MM-DD"))
+  let pos = (width == undefined ? -2 : -width / 2)
+  const main_width = -pos;
+  const planBar = plan?.map((v: TPlan, i: number) => {
+    pos += v.width;
+    if (date.diff(v.startDate, 'days') > 0 && v.endDate.diff(date, 'days') > 0)
+      return <Box position={'absolute'} style={{
+        border: `2px solid ${v.color}`,
+      }} top={`calc(50% + ${pos}px)`} width={'100%'} height={'0px'}></Box>
+    else
+      return <></>
+  })
 
   let dateColor = 'white';
-  console.log(date.diff(moment(new Date(), "MM-DD-YYYY"), 'days'))
   if (date.diff(moment(new Date(), "MM-DD-YYYY"), 'days') == 0)
     dateColor = 'coral';
   return (
@@ -102,12 +113,18 @@ const OneDay = (prop: TOneDay) => {
         {date.date()}
       </IconButton>
       {cornerL}
-      <Box style={{
-        border: '2px solid gray',
-      }} width={'50%'} height={'0px'}></Box>
-      <Box style={{
-        border: '2px solid gray',
-      }} width={'50%'} height={'0px'}></Box>
+      <Box position={'relative'} width={'50%'}>
+        <Box style={{
+          border: `${main_width}px solid gray`,
+        }} width={'100%'} height={'0px'}></Box>
+        <>{planBar}</>
+      </Box>
+      <Box position={'relative'} width={'50%'}>
+        <Box style={{
+          border: `${main_width}px solid gray`,
+        }} width={'100%'} height={'0px'}></Box>
+        <>{planBar}</>
+      </Box>
       {cornerR}
     </Flex >
   )

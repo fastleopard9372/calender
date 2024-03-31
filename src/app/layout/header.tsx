@@ -23,10 +23,10 @@ const Header = () => {
     setKind(m_kind);
   }
   const plan: TPlan[] = [
-    { color: 'red', width: '4px', description: '', startDate: moment("3-19-2024", "MM-DD-YYYY"), endDate: moment("3-28-2024", "MM-DD-YYYY") },
-    { color: 'blue', width: '4px', description: '', startDate: moment("3-28-2024", "MM-DD-YYYY"), endDate: moment("4-02-2024", "MM-DD-YYYY") },
-    { color: 'green', width: '4px', description: '', startDate: moment("3-23-2024", "MM-DD-YYYY"), endDate: moment("4-04-2024", "MM-DD-YYYY") },
-    { color: 'cyan', width: '4px', description: '', startDate: moment("3-20-2024", "MM-DD-YYYY"), endDate: moment("3-29-2024", "MM-DD-YYYY") }
+    { color: 'red', width: 4, description: '', startDate: moment("3-27-2024", "MM-DD-YYYY"), endDate: moment("3-28-2024", "MM-DD-YYYY") },
+    { color: 'blue', width: 4, description: '', startDate: moment("3-28-2024", "MM-DD-YYYY"), endDate: moment("4-02-2024", "MM-DD-YYYY") },
+    { color: 'green', width: 4, description: '', startDate: moment("3-23-2024", "MM-DD-YYYY"), endDate: moment("4-04-2024", "MM-DD-YYYY") },
+    { color: 'cyan', width: 4, description: '', startDate: moment("3-20-2024", "MM-DD-YYYY"), endDate: moment("3-29-2024", "MM-DD-YYYY") }
   ]
   useEffect(() => {
     let startDate = date.clone().startOf('month').startOf('week');

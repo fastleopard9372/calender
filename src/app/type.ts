@@ -1,17 +1,17 @@
 import moment from "moment"
 
 export interface TPlan {
-  color?: string | 'indigo'
-  width?: number | string | "4px"
+  color: string | 'indigo'
+  width: number | 4
   position?: number
-  startDate?: moment.Moment,
-  endDate?: moment.Moment
-  description?: string
+  startDate: moment.Moment,
+  endDate: moment.Moment
+  description: string
 }
 
 export interface TOneDay {
   color?: string | 'indigo'
-  width?: number | string | "4px"
+  width?: number | 4
   datesCnt?: number
   date: moment.Moment,
   month: number,
