@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Theme } from '@radix-ui/themes';
 import "./globals.css";
-
+import '@radix-ui/themes/styles.css';
+import '@radix-ui/themes/tokens.css';
+import '@radix-ui/themes/components.css';
+import '@radix-ui/themes/utilities.css';
+import '@radix-ui/themes/layout.css';
+import './styles.css';
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -16,7 +22,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <Theme>
+          {children}
+        </Theme>
+      </body>
     </html>
   );
 }
