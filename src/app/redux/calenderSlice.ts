@@ -1,10 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import moment from 'moment';
 import { RootState } from './store';
-const initialState: { date: moment.Moment, kind: moment.unitOfTime.DurationConstructor } =
+import { TPlan } from '../type';
+const initialState: { date: moment.Moment, kind: moment.unitOfTime.DurationConstructor, plan: TPlan[] | undefined } =
 {
     date: moment(moment(new Date(), "MM-DD-YYYY")),
-    kind: "month"
+    kind: "month",
+    plan: undefined
 };
 export const CalenderSlice = createSlice({
     name: "Calender",
@@ -15,11 +17,14 @@ export const CalenderSlice = createSlice({
         },
         setKind(state, action) {
             state.kind = action.payload
+        },
+        setPlan(state, action) {
+            state.plan = action.payload
         }
     }
 });
 
-export const { setDate, setKind } = CalenderSlice.actions;
+export const { setDate, setKind, setPlan } = CalenderSlice.actions;
 export const getCalender = (state: RootState) => state.Calender;
 
 export default CalenderSlice.reducer;

@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 import moment from 'moment';
-import { Flex, Tabs, DropdownMenu, Button, IconButton, Grid, Box } from '@radix-ui/themes';
+import { Flex, Tabs, DropdownMenu, Button, IconButton } from '@radix-ui/themes';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons'
 import { useAppSelector, useAppDispatch } from '@/app/redux/hook';
 import { setDate, setKind, getCalender } from '@/app/redux/calenderSlice';
@@ -10,6 +10,9 @@ const Header = () => {
   const { date, kind } = useAppSelector(getCalender);
   const handleClickMonth = (kind: moment.unitOfTime.DurationConstructor, value: number) => {
     dispatch(setDate(date.clone().add(value, kind)))
+  }
+  const handleClickMonthD = (value: number) => {
+    dispatch(setDate(date.clone().month(value)))
   }
   const handleClickYear = (year: number) => {
     dispatch(setDate(date.clone().year(year)))
@@ -45,8 +48,8 @@ const Header = () => {
             <DropdownMenu.Content className='max-h-[300px]'>
               {
                 Array(12).fill(0).map((v: number, i: number) => (
-                  <DropdownMenu.Item key={i} onClick={() => handleClickMonth("months", i)}>
-                    {moment(new Date()).add(i, "months").format('MMMM')}
+                  <DropdownMenu.Item key={i} onClick={() => handleClickMonthD(i)}>
+                    {moment().month(i).format("MMMM")}
                   </DropdownMenu.Item>
                 ))
               }

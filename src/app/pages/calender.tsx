@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import moment from 'moment';
 import { Grid } from '@radix-ui/themes';
 import { useAppSelector, useAppDispatch } from '@/app/redux/hook';
-import { setDate, setKind, getCalender } from '@/app/redux/calenderSlice';
+import { getCalender } from '@/app/redux/calenderSlice';
 import OneDay from '../components/oneDay';
 import { TPlan } from '../type';
 
@@ -14,10 +14,11 @@ const Calender = () => {
 
 
   const plan: TPlan[] = [
-    { color: 'red', width: 4, description: '', startDate: moment("3-1-2024", "MM-DD-YYYY"), endDate: moment("3-30-2024", "MM-DD-YYYY") },
-    { color: 'blue', width: 4, description: '', startDate: moment("3-2-2024", "MM-DD-YYYY"), endDate: moment("4-02-2024", "MM-DD-YYYY") },
-    { color: 'green', width: 4, description: '', startDate: moment("3-23-2024", "MM-DD-YYYY"), endDate: moment("4-04-2024", "MM-DD-YYYY") },
-    { color: 'cyan', width: 4, description: '', startDate: moment("3-20-2024", "MM-DD-YYYY"), endDate: moment("3-29-2024", "MM-DD-YYYY") }
+    { color: 'red', width: 2, startDate: moment("3-20-2024", "MM-DD-YYYY"), endDate: moment("3-25-2024", "MM-DD-YYYY"), demo: "This is my demo1" },
+    { color: 'black', width: 2, startDate: moment("3-21-2024", "MM-DD-YYYY"), endDate: moment("3-28-2024", "MM-DD-YYYY"), demo: "This is my demo2" },
+    { color: 'blue', width: 2, startDate: moment("2-18-2024", "MM-DD-YYYY"), endDate: moment("3-15-2024", "MM-DD-YYYY"), demo: "This is my demo3" },
+    { color: 'green', width: 2, startDate: moment("3-23-2024", "MM-DD-YYYY"), endDate: moment("4-19-2024", "MM-DD-YYYY"), demo: "This is my demo4" },
+    { color: 'cyan', width: 2, startDate: moment("3-20-2024", "MM-DD-YYYY"), endDate: moment("4-10-2024", "MM-DD-YYYY"), demo: "This is my demo5" }
   ]
   useEffect(() => {
     let startDate = date.clone().startOf('month').startOf('week');
@@ -36,6 +37,7 @@ const Calender = () => {
             date: startDate.clone().add(i * 7 + k, "days"),
             month: date.clone().month(),
             datesCnt,
+            width: 2,
             plan
           }} />);
       }
