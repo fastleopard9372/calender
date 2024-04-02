@@ -5,6 +5,7 @@ import moment from 'moment'
 import TOneDay, { TPlan } from '../type'
 const OneDay = (prop: TOneDay) => {
   const { no, date, month, datesCnt, plan, width, color } = prop;
+  const sort_plan = plan?.sort((a, b) => a.startDate.diff(b.startDate, "days"))
   let cornerL = <></>
   let cornerR = <></>
   let k = no;
@@ -90,7 +91,7 @@ const OneDay = (prop: TOneDay) => {
   console.log(date.format("YYYY-MM-DD"))
   let pos = (width == undefined ? -2 : -width / 2)
   const main_width = -pos;
-  const planBar = plan?.map((v: TPlan, i: number) => {
+  const planBar = sort_plan?.map((v: TPlan, i: number) => {
     pos += v.width;
     if (date.diff(v.startDate, 'days') > 0 && v.endDate.diff(date, 'days') > 0)
       return <Box position={'absolute'} style={{

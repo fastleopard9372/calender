@@ -1,15 +1,12 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import moment from 'moment';
 import { Flex, Tabs, DropdownMenu, Button, IconButton, Grid, Box } from '@radix-ui/themes';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons'
-import OneDay from '../components/oneDay';
-import { TPlan } from '../type';
 
 const Header = () => {
   const [date, setDate] = useState<moment.Moment>(moment(new Date(), "MM-DD-YYYY"))
   const [kind, setKind] = useState<string>("month")
-  const [datesOfMonth, setDatesOfMonth] = useState<JSX.Element>()
   const handleClickMonth = (kind: moment.unitOfTime.DurationConstructor, value: number) => {
     setDate(date.clone().add(value, kind));
   }
@@ -22,37 +19,6 @@ const Header = () => {
   const handleClickKind = (m_kind: string) => {
     setKind(m_kind);
   }
-  const plan: TPlan[] = [
-    { color: 'red', width: 4, description: '', startDate: moment("3-27-2024", "MM-DD-YYYY"), endDate: moment("3-28-2024", "MM-DD-YYYY") },
-    { color: 'blue', width: 4, description: '', startDate: moment("3-28-2024", "MM-DD-YYYY"), endDate: moment("4-02-2024", "MM-DD-YYYY") },
-    { color: 'green', width: 4, description: '', startDate: moment("3-23-2024", "MM-DD-YYYY"), endDate: moment("4-04-2024", "MM-DD-YYYY") },
-    { color: 'cyan', width: 4, description: '', startDate: moment("3-20-2024", "MM-DD-YYYY"), endDate: moment("3-29-2024", "MM-DD-YYYY") }
-  ]
-  useEffect(() => {
-    let startDate = date.clone().startOf('month').startOf('week');
-    let endDate = date.clone().endOf('month').endOf('week');
-    let datesCount = endDate.diff(startDate, 'days') + 1;
-    let day: JSX.Element[] = [];
-    for (let i = 0; i < datesCount / 7; i++) {
-      let inner_item: JSX.Element[] = [];
-      for (let j = 0; j < 7; j++) {
-        let k = j;
-        if (i % 2)
-          k = 6 - j
-        inner_item.push(<OneDay key={i * 7 + k} {
-          ...{
-            no: i * 7 + k,
-            date: startDate.clone().add(i * 7 + k, "days"),
-            month: date.clone().month(),
-            datesCnt: datesCount,
-            plan
-          }} />);
-      }
-      day.push(<Grid columns="7" gap="0" width="auto">{inner_item}
-      </Grid>);
-    }
-    setDatesOfMonth(<>{day}</>);
-  }, [date])
   return (
     <>
       <Flex direction="row" justify="between" gap="4" pb="2">
@@ -110,9 +76,6 @@ const Header = () => {
           </Tabs.List>
         </Tabs.Root>
       </Flex >
-      <Grid columns="1" gap="0" width="auto" className='h-[500px]'>
-        {datesOfMonth}
-      </Grid>
     </>
   )
 }
