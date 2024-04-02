@@ -3,18 +3,19 @@ import React, { useState } from 'react'
 import moment from 'moment';
 import { Flex, Tabs, DropdownMenu, Button, IconButton, Grid, Box } from '@radix-ui/themes';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons'
-
+import { useAppSelector, useAppDispatch } from '@/app/redux/hook';
+import { setDate, setKind, getCalender } from '@/app/redux/calenderSlice';
 const Header = () => {
-  const [date, setDate] = useState<moment.Moment>(moment(new Date(), "MM-DD-YYYY"))
-  const [kind, setKind] = useState<string>("month")
+  const dispatch = useAppDispatch();
+  const { date, kind } = useAppSelector(getCalender);
   const handleClickMonth = (kind: moment.unitOfTime.DurationConstructor, value: number) => {
-    setDate(date.clone().add(value, kind));
+    dispatch(setDate(date.clone().add(value, kind)))
   }
   const handleClickYear = (year: number) => {
-    setDate(date.clone().year(year))
+    dispatch(setDate(date.clone().year(year)))
   }
   const handleClickToday = () => {
-    setDate(moment(new Date(), "MM-DD-YYYY"))
+    dispatch(setDate(moment(new Date(), "MM-DD-YYYY")))
   }
   const handleClickKind = (m_kind: string) => {
     setKind(m_kind);
