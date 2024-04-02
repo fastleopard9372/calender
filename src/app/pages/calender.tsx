@@ -14,17 +14,17 @@ const Calender = () => {
 
 
   const plan: TPlan[] = [
-    { color: 'red', width: 4, description: '', startDate: moment("3-27-2024", "MM-DD-YYYY"), endDate: moment("3-30-2024", "MM-DD-YYYY") },
-    { color: 'blue', width: 4, description: '', startDate: moment("3-28-2024", "MM-DD-YYYY"), endDate: moment("4-02-2024", "MM-DD-YYYY") },
+    { color: 'red', width: 4, description: '', startDate: moment("3-1-2024", "MM-DD-YYYY"), endDate: moment("3-30-2024", "MM-DD-YYYY") },
+    { color: 'blue', width: 4, description: '', startDate: moment("3-2-2024", "MM-DD-YYYY"), endDate: moment("4-02-2024", "MM-DD-YYYY") },
     { color: 'green', width: 4, description: '', startDate: moment("3-23-2024", "MM-DD-YYYY"), endDate: moment("4-04-2024", "MM-DD-YYYY") },
     { color: 'cyan', width: 4, description: '', startDate: moment("3-20-2024", "MM-DD-YYYY"), endDate: moment("3-29-2024", "MM-DD-YYYY") }
   ]
   useEffect(() => {
     let startDate = date.clone().startOf('month').startOf('week');
     let endDate = date.clone().endOf('month').endOf('week');
-    let datesCount = endDate.diff(startDate, 'days') + 1;
+    let datesCnt = endDate.diff(startDate, 'days') + 1;
     let day: JSX.Element[] = [];
-    for (let i = 0; i < datesCount / 7; i++) {
+    for (let i = 0; i < datesCnt / 7; i++) {
       let inner_item: JSX.Element[] = [];
       for (let j = 0; j < 7; j++) {
         let k = j;
@@ -35,11 +35,11 @@ const Calender = () => {
             no: i * 7 + k,
             date: startDate.clone().add(i * 7 + k, "days"),
             month: date.clone().month(),
-            datesCnt: datesCount,
+            datesCnt,
             plan
           }} />);
       }
-      day.push(<Grid columns="7" gap="0" width="auto">{inner_item}
+      day.push(<Grid columns="7" key={i} gap="0" width="auto">{inner_item}
       </Grid>);
     }
     setDatesOfMonth(<>{day}</>);
