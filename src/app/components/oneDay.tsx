@@ -4,7 +4,7 @@ import { IconButton, Flex, Box, Popover } from '@radix-ui/themes'
 import moment from 'moment'
 
 import { useAppDispatch } from '@/app/redux/hook';
-import { setDate, setPlan } from '@/app/redux/calenderSlice';
+import { setDate, setPlan, setDateAndPlan } from '@/app/redux/calenderSlice';
 
 import TOneDay, { TPlan } from '../type'
 import Comment from './comment'
@@ -112,8 +112,7 @@ const OneDay = (prop: TOneDay) => {
   const { no, date, month, datesCnt, plan, width, color } = prop;
 
   const handleIconButton = ({ date, plan }: { date: moment.Moment, plan: TPlan[] | undefined }) => {
-    dispatch(setPlan(plan));
-    dispatch(setDate(date));
+    dispatch(setDateAndPlan({ date, plan }));
   }
   const sort_plan: TPlan[] | undefined = plan?.sort((a, b) => a.startDate.isBefore(b.startDate) ? -1 : 1);
   let cornerL = null
@@ -126,7 +125,7 @@ const OneDay = (prop: TOneDay) => {
       pos += v.width;
       if (date.isBetween(v.startDate, v.endDate, 'day', "[)")) {
         return Conner({ no: 0, width: v.width, color: v.color, position: pos - v.width / 2 })
-      } else return <></>
+      } else return null
     })
     cornerL = <Box style={{
       position: 'relative',

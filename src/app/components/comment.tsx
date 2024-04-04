@@ -1,16 +1,24 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Popover, Button, Flex, Box, TextArea, Link, Heading } from '@radix-ui/themes'
-import { useAppSelector, useAppDispatch } from '@/app/redux/hook';
-import { getCalender, setDate, setPlan } from '@/app/redux/calenderSlice';
+import { useAppSelector } from '@/app/redux/hook';
+import { getCalender } from '@/app/redux/calenderSlice';
 import { TPlan } from '../type';
 const Comment = () => {
-  const dispatch = useAppDispatch();
   const { date, plan } = useAppSelector(getCalender);
   const [demo, setDemo] = useState<string>(plan == undefined ? "" : plan[0].demo)
   const handleDemoShow = (i: number) => {
+    console.log(plan)
     setDemo(plan == undefined ? "" : plan[i].demo);
   }
+  const handleChange = (e: any) => {
+    setDemo(e.target.value)
+  }
+  useEffect(() => {
+    if (plan !== undefined) {
+      setDemo(plan[0].demo);
+    }
+  })
   return (
     <>
       <Popover.Content width="640px">
@@ -22,13 +30,13 @@ const Comment = () => {
             {
               plan?.map((v: TPlan, i: number) => {
                 if (date.isBetween(v.startDate, v.endDate, "day", "[]")) {
-                  return <Link className='cursor-pointer' onClick={e => handleDemoShow(i)}>Schedule {i + 1}</Link>
+                  return <Link key={i} className='cursor-pointer' onClick={e => handleDemoShow(i)}>Schedule {i + 1}</Link>
                 }
               })
             }
           </Flex>
           <Box flexGrow="1">
-            <TextArea placeholder="Write a comment…" value={demo} style={{ height: 80 }} />
+            <TextArea placeholder="Write a comment…" name='demo' value={demo} style={{ height: 80 }} onChange={handleChange} />
             <Flex gap="3" mt="3" justify="between">
               {/* <Flex align="center" gap="2" asChild>
                 <Text as="label" size="2">
