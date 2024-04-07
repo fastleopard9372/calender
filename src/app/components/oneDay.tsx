@@ -4,7 +4,7 @@ import { IconButton, Flex, Box, Popover } from '@radix-ui/themes'
 import moment from 'moment'
 
 import { useAppDispatch } from '@/app/redux/hook';
-import { setDate, setPlan, setDateAndPlan } from '@/app/redux/calenderSlice';
+import { setDateAndPlan } from '@/app/redux/calenderSlice';
 
 import TOneDay, { TPlan } from '../type'
 import Comment from './comment'

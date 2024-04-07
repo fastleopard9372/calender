@@ -2,12 +2,12 @@
 import React, { useState } from 'react'
 import moment from 'moment';
 import { Flex, Tabs, DropdownMenu, Button, IconButton } from '@radix-ui/themes';
-import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons'
+import { ChevronLeftIcon, ChevronRightIcon, PlusIcon } from '@radix-ui/react-icons'
 import { useAppSelector, useAppDispatch } from '@/app/redux/hook';
-import { setDate, setKind, getCalender } from '@/app/redux/calenderSlice';
+import { setDate, setKind, getCalender, setIsShowDialog } from '@/app/redux/calenderSlice';
 const Header = () => {
   const dispatch = useAppDispatch();
-  const { date, kind } = useAppSelector(getCalender);
+  const { date, isShowDialog } = useAppSelector(getCalender);
   const handleClickMonth = (kind: moment.unitOfTime.DurationConstructor, value: number) => {
     dispatch(setDate(date.clone().add(value, kind)))
   }
@@ -23,9 +23,15 @@ const Header = () => {
   const handleClickKind = (m_kind: string) => {
     setKind(m_kind);
   }
+  const handleDialogOpen = () => {
+    dispatch(setIsShowDialog(true))
+  }
   return (
     <>
       <Flex direction="row" justify="between" gap="4" pb="2">
+        <Flex pt="2">
+          <Button value='Create' className='cursor-pointer' variant='soft' color='cyan' radius='full' onClick={handleDialogOpen}> <PlusIcon />Create</Button>
+        </Flex>
         <Flex gap="3" pt="2">
           <Flex gap="3" >
             <Button variant="soft" onClick={handleClickToday}>

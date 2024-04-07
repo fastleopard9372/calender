@@ -18,7 +18,7 @@ const Comment = () => {
     if (plan !== undefined) {
       setDemo(plan[0].demo);
     }
-  })
+  }, [plan])
   return (
     <>
       <Popover.Content width="640px">

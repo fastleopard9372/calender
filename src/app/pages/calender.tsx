@@ -8,8 +8,7 @@ import OneDay from '../components/oneDay';
 import { TPlan } from '../type';
 
 const Calender = () => {
-  const dispatch = useAppDispatch();
-  const { date, kind } = useAppSelector(getCalender);
+  const { date } = useAppSelector(getCalender);
   const [datesOfMonth, setDatesOfMonth] = useState<JSX.Element>()
 
 
