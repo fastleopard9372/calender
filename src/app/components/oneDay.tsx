@@ -60,9 +60,11 @@ const Conner = ({ no, width, color, position }: { no: number; width?: number; co
         borderTop: `${wid}px solid ${col}`,
         borderLeft: `${wid}px solid ${col}`,
         borderRadius: `10px 0px 0px 0px`,
-        width: `calc(100% + ${pos}px)`,
+        // width: `calc(100% + ${pos}px)`,
+        width: `100%`,
         height: '80%',
-        left: `${-pos}px`,
+        // left: `${-pos}px`,
+        left: `0px`,
         top: `calc(50% - ${wid / 2}px + ${pos}px)`,
         borderRight: 'none',
         borderBottom: 'none',
@@ -74,9 +76,11 @@ const Conner = ({ no, width, color, position }: { no: number; width?: number; co
       borderBottom: `${wid}px solid ${col}`,
       borderLeft: `${wid}px solid ${col}`,
       borderRadius: `0px 0px 0px 10px`,
-      width: `calc(100% + ${pos}px)`,
-      left: `${-pos}px`,
-      height: '50%',
+      // width: `calc(100% + ${pos}px)`,
+      width: `100%`,
+      // left: `${-pos}px`,
+      left: `0px`,
+      height: `calc(70% + ${pos}px)`,
       bottom: `calc(50% - ${wid / 2}px - ${pos}px)`,
       borderRight: 'none',
       borderTop: 'none',
@@ -87,8 +91,9 @@ const Conner = ({ no, width, color, position }: { no: number; width?: number; co
       borderTop: `${wid}px solid ${col}`,
       borderRight: `${wid}px solid ${col}`,
       borderRadius: '0px 10px 0px 0px',
-      width: `calc(100% + ${pos}px)`,
-      height: '60%',
+      // width: `calc(100% + ${pos}px)`,
+      width: `100%`,
+      height: `calc(70% + ${pos}px)`,
       top: `calc(50% - ${wid / 2}px + ${pos}px)`,
       borderLeft: 'none',
       borderBottom: 'none',
@@ -99,8 +104,9 @@ const Conner = ({ no, width, color, position }: { no: number; width?: number; co
       borderBottom: `${wid}px solid ${col}`,
       borderRight: `${wid}px solid ${col}`,
       borderRadius: '0px 0px 10px 0px',
-      width: `calc(100% + ${pos}px)`,
-      height: '50%',
+      // width: `calc(100% + ${pos}px)`,
+      width: `100%`,
+      height: `calc(70% + ${pos}px)`,
       bottom: `calc(50% - ${wid / 2}px - ${pos}px)`,
       borderLeft: 'none',
       borderTop: 'none',
@@ -121,10 +127,15 @@ const OneDay = (prop: TOneDay) => {
   if (~~(no / 7) % 2) k = ~~(no / 7) * 7 + (6 - no % 7)
   if (no == 0) {
     let pos = -width / 2;
-    let connerPlan = sort_plan?.map((v: TPlan, i: number) => {
-      pos += v.width;
+    let connerPlan = sort_plan?.map((v: TPlan, i: number, a: TPlan[]) => {
+      let _pos = pos;
+      for (let j = 0; j <= i; j++) {
+        if (a[j].endDate.clone().weekday(6).isSameOrAfter(date) && a[j].endDate.isSameOrAfter(v.startDate)) {
+          _pos += v.width;
+        }
+      }
       if (date.isBetween(v.startDate, v.endDate, 'day', "[)")) {
-        return Conner({ no: 0, width: v.width, color: v.color, position: pos - v.width / 2 })
+        return Conner({ no: 0, width: v.width, color: v.color, position: _pos - v.width / 2 })
       } else return null
     })
     cornerL = <Box style={{
@@ -136,10 +147,15 @@ const OneDay = (prop: TOneDay) => {
   } else if (datesCnt == no + 1) {
 
     let pos = -width / 2;
-    let connerPlan = sort_plan?.map((v: TPlan, i: number) => {
-      pos += v.width;
+    let connerPlan = sort_plan?.map((v: TPlan, i: number, a: TPlan[]) => {
+      let _pos = pos;
+      for (let j = 0; j <= i; j++) {
+        if (a[j].endDate.clone().weekday(6).isSameOrAfter(date) && a[j].endDate.isSameOrAfter(v.startDate)) {
+          _pos += v.width;
+        }
+      }
       if (date.isBetween(v.startDate, v.endDate, 'day', "[)")) {
-        return Conner({ no: 1, width: v.width, color: v.color, position: pos - v.width / 2 })
+        return Conner({ no: 1, width: v.width, color: v.color, position: _pos - v.width / 2 })
       } else return <></>
     })
     if (~~(datesCnt / 7) % 2) {
@@ -161,10 +177,17 @@ const OneDay = (prop: TOneDay) => {
 
   } else if (no % 14 == 13) {
     let pos = -width / 2;
-    let connerPlan = sort_plan?.map((v: TPlan, i: number) => {
-      pos += v.width;
+    let connerPlan = sort_plan?.map((v: TPlan, i: number, a: TPlan[]) => {
+      let _pos = pos;
+      for (let j = 0; j <= i; j++) {
+        if (a[j].endDate.clone().weekday(6).isSameOrAfter(date) && a[j].endDate.isSameOrAfter(v.startDate)) {
+          _pos += v.width;
+        }
+      }
       if (date.isBetween(v.startDate, v.endDate, 'day', "[)")) {
-        return Conner({ no: 3, width: v.width, color: v.color, position: pos - v.width / 2 })
+        return Conner({
+          no: 3, width: v.width, color: v.color, position: _pos - v.width / 2
+        })
       } else return <></>
     })
     cornerL = <Box style={{
@@ -174,10 +197,15 @@ const OneDay = (prop: TOneDay) => {
     }} > {Conner({ no: 3, width })}{connerPlan}</ Box>
   } else if (no % 14 == 0) {
     let pos = -width / 2;
-    let connerPlan = sort_plan?.map((v: TPlan, i: number) => {
-      pos += v.width;
+    let connerPlan = sort_plan?.map((v: TPlan, i: number, a: TPlan[]) => {
+      let _pos = pos;
+      for (let j = 0; j <= i; j++) {
+        if (a[j].endDate.clone().weekday(6).isSameOrAfter(date) && a[j].endDate.isSameOrAfter(v.startDate)) {
+          _pos += v.width;
+        }
+      }
       if (date.isBetween(v.startDate, v.endDate, 'day', "(]")) {
-        return Conner({ no: 4, width: v.width, color: v.color, position: pos - v.width / 2 })
+        return Conner({ no: 4, width: v.width, color: v.color, position: _pos - v.width / 2 })
       } else return <></>
     })
     cornerL = <Box style={{
@@ -187,10 +215,15 @@ const OneDay = (prop: TOneDay) => {
     }} > {Conner({ no: 4, width })}{connerPlan}</ Box>
   } else if (no % 14 == 6) {
     let pos = -width / 2;
-    let connerPlan = sort_plan?.map((v: TPlan, i: number) => {
-      pos += v.width;
+    let connerPlan = sort_plan?.map((v: TPlan, i: number, a: TPlan[]) => {
+      let _pos = pos;
+      for (let j = 0; j <= i; j++) {
+        if (a[j].endDate.clone().weekday(6).isSameOrAfter(date) && a[j].endDate.isSameOrAfter(v.startDate)) {
+          _pos += v.width;
+        }
+      }
       if (date.isBetween(v.startDate, v.endDate, 'day', "[)")) {
-        return Conner({ no: 5, width: v.width, color: v.color, position: pos - v.width / 2 })
+        return Conner({ no: 5, width: v.width, color: v.color, position: _pos - v.width / 2 })
       } else return <></>
     })
     cornerR = <Box style={{
@@ -201,10 +234,15 @@ const OneDay = (prop: TOneDay) => {
 
   } else if (no % 14 == 7) {
     let pos = -width / 2;
-    let connerPlan = sort_plan?.map((v: TPlan, i: number) => {
-      pos += v.width;
+    let connerPlan = sort_plan?.map((v: TPlan, i: number, a: TPlan[]) => {
+      let _pos = pos;
+      for (let j = 0; j <= i; j++) {
+        if (a[j].endDate.clone().weekday(6).isSameOrAfter(date) && a[j].endDate.isSameOrAfter(v.startDate)) {
+          _pos += v.width;
+        }
+      }
       if (date.isBetween(v.startDate, v.endDate, 'day', "(]")) {
-        return Conner({ no: 6, width: v.width, color: v.color, position: pos - v.width / 2 })
+        return Conner({ no: 6, width: v.width, color: v.color, position: _pos - v.width / 2 })
       } else return <></>
     })
     cornerR = <Box style={{
@@ -217,8 +255,13 @@ const OneDay = (prop: TOneDay) => {
   const main_width = (width == undefined ? 1 : width / 2);
 
   let planDay = false;
-  const planBarL = sort_plan?.map((v: TPlan, i: number) => {
-    pos += v.width;
+  const planBarL = sort_plan?.map((v: TPlan, i: number, a: TPlan[]) => {
+    let _pos = pos;
+    for (let j = 0; j <= i; j++) {
+      if (a[j].endDate.clone().weekday(6).isSameOrAfter(date) && a[j].endDate.isSameOrAfter(v.startDate)) {
+        _pos += v.width;
+      }
+    }
     if (date.isSame(v.startDate) || date.isSame(v.endDate)) {
       planDay = true;
     }
@@ -228,39 +271,44 @@ const OneDay = (prop: TOneDay) => {
     }
     if (~~(no / 7) % 2 == 1) {
       if (date.isSame(v.startDate, 'day')) {
-        return <Bar color={v.color} position={pos - v.width} width={v.width} />;
+        return <Bar color={v.color} position={_pos - v.width} width={v.width} />;
       }
     }
     else {
       if (date.isSame(v.endDate, 'day')) {
-        return <Bar color={v.color} position={pos - v.width} width={v.width} />;
+        return <Bar color={v.color} position={_pos - v.width} width={v.width} />;
       }
     }
     if (date.isBetween(v.startDate, v.endDate, 'day')) {
-      return <Bar color={v.color} position={pos - v.width} width={v.width} />;
+      return <Bar color={v.color} position={_pos - v.width} width={v.width} />;
     } else {
       return null;
     }
   });
 
   pos = -(width == undefined ? 1 : width / 2);
-  const planBarR = sort_plan?.map((v: TPlan, i: number) => {
-    pos += v.width;
+  const planBarR = sort_plan?.map((v: TPlan, i: number, a: TPlan[]) => {
+    let _pos = pos;
+    for (let j = 0; j <= i; j++) {
+      if (a[j].endDate.clone().weekday(6).isSameOrAfter(date) && a[j].endDate.isSameOrAfter(v.startDate)) {
+        _pos += v.width;
+      }
+    }
     if (v.startDate.isSame(v.endDate)) {
       return <></>;
     }
     if (~~(no / 7) % 2 == 0) {
       if (date.isSame(v.startDate, 'day')) {
-        return <Bar color={v.color} position={pos - v.width} width={v.width} />;
+        return <Bar color={v.color} position={_pos - v.width} width={v.width} />;
       }
     }
     else {
       if (date.isSame(v.endDate, 'day')) {
-        return <Bar color={v.color} position={pos - v.width} width={v.width} />;
+        return <Bar color={v.color} position={_pos - v.width} width={v.width} />;
       }
     }
     if (date.isBetween(v.startDate, v.endDate, 'day')) {
-      return <Bar color={v.color} position={pos - v.width} width={v.width} />;
+      return <Bar color={v.color} position={_pos - v.width} width={v.width} />;
     } else {
       return null;
     }

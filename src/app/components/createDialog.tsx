@@ -1,7 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { Dialog, Button, Flex, TextArea } from '@radix-ui/themes'
-import DatePicker from "react-datepicker";
+import { Dialog, Button, Flex, TextArea, TextField } from '@radix-ui/themes'
 import { useAppDispatch, useAppSelector } from '../redux/hook'
 import { setIsShowDialog, setNewPlan, getCalender } from '../redux/calenderSlice'
 const CreateDialog = () => {
@@ -20,24 +19,26 @@ const CreateDialog = () => {
           <Flex direction="row" gap="4">
             <Flex direction="column">
               Start Date:
-              <DatePicker
+              {/* <DatePicker
                 selected={startDate}
                 onChange={(date: Date) => setStartDate(date)}
                 selectsStart
                 startDate={startDate}
                 endDate={endDate}
-              />
+              /> */}
+              {/* <Text
+                data-date-format="DD MMMM YYYY" */}
             </Flex>
             <Flex direction="column">
               End Date:
-              <DatePicker
+              {/* <DatePicker
                 selected={endDate}
                 onChange={(date: Date) => setEndDate(date)}
                 selectsEnd
                 startDate={startDate}
                 endDate={endDate}
                 minDate={startDate}
-              />
+              /> */}
             </Flex>
           </Flex>
           <Flex direction="row" gap="4">

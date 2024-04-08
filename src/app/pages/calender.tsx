@@ -13,11 +13,12 @@ const Calender = () => {
 
 
   const plan: TPlan[] = [
-    { color: 'red', width: 2, startDate: moment("3-20-2024", "MM-DD-YYYY"), endDate: moment("3-25-2024", "MM-DD-YYYY"), demo: "This is my demo1" },
-    { color: 'black', width: 2, startDate: moment("3-21-2024", "MM-DD-YYYY"), endDate: moment("3-28-2024", "MM-DD-YYYY"), demo: "This is my demo2" },
-    { color: 'blue', width: 2, startDate: moment("2-18-2024", "MM-DD-YYYY"), endDate: moment("3-15-2024", "MM-DD-YYYY"), demo: "This is my demo3" },
-    { color: 'green', width: 2, startDate: moment("3-23-2024", "MM-DD-YYYY"), endDate: moment("4-19-2024", "MM-DD-YYYY"), demo: "This is my demo4" },
-    { color: 'cyan', width: 2, startDate: moment("3-20-2024", "MM-DD-YYYY"), endDate: moment("4-10-2024", "MM-DD-YYYY"), demo: "This is my demo5" }
+    { color: 'red', width: 2, startDate: moment("3-28-2024", "MM-DD-YYYY"), endDate: moment("4-9-2024", "MM-DD-YYYY"), demo: "This is my demo1" },
+    { color: 'black', width: 2, startDate: moment("4-3-2024", "MM-DD-YYYY"), endDate: moment("4-16-2024", "MM-DD-YYYY"), demo: "This is my demo2" },
+    { color: 'magenta', width: 2, startDate: moment("4-3-2024", "MM-DD-YYYY"), endDate: moment("4-16-2024", "MM-DD-YYYY"), demo: "This is my demo2" },
+    { color: 'blue', width: 2, startDate: moment("4-17-2024", "MM-DD-YYYY"), endDate: moment("4-17-2024", "MM-DD-YYYY"), demo: "This is my demo3" },
+    { color: 'green', width: 2, startDate: moment("4-19-2024", "MM-DD-YYYY"), endDate: moment("5-4-2024", "MM-DD-YYYY"), demo: "This is my demo4" },
+    { color: 'cyan', width: 2, startDate: moment("4-21-2024", "MM-DD-YYYY"), endDate: moment("4-25-2024", "MM-DD-YYYY"), demo: "This is my demo5" }
   ]
   useEffect(() => {
     let startDate = date.clone().startOf('month').startOf('week');
