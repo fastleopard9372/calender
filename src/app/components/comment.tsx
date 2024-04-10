@@ -1,9 +1,17 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { Popover, Button, Flex, Box, TextArea, Link, Heading } from '@radix-ui/themes'
+import { Popover, Button, Flex, Box, TextArea, Link, Heading, Text } from '@radix-ui/themes'
 import { useAppSelector } from '@/app/redux/hook';
 import { getCalender } from '@/app/redux/calenderSlice';
 import { TPlan } from '../type';
+
+function cutString(str: string) {
+  if (str.length > 10) {
+    return str.substring(0, 10) + " ...";
+  }
+  return str;
+}
+
 const Comment = () => {
   const { date, plan } = useAppSelector(getCalender);
   const [demo, setDemo] = useState<string>(plan == undefined ? "" : plan[0].demo)
@@ -27,13 +35,16 @@ const Comment = () => {
         </Heading>
         <Flex gap="3">
           <Flex direction={'column'}>
-            {
-              plan?.map((v: TPlan, i: number) => {
-                if (date.isBetween(v.startDate, v.endDate, "day", "[]")) {
-                  return <Link key={i} className='cursor-pointer' onClick={e => handleDemoShow(i)}>Schedule {i + 1}</Link>
-                }
-              })
-            }
+            <Text className='font-bold'>Task List</Text>
+            <Flex direction={'column'} className='rounded shadow p-2'>
+              {
+                plan?.map((v: TPlan, i: number) => {
+                  if (date.isBetween(v.startDate, v.endDate, "day", "[]")) {
+                    return <Link key={i} className='cursor-pointer' onClick={e => handleDemoShow(i)}>{cutString(v.title)}</Link>
+                  }
+                })
+              }
+            </Flex>
           </Flex>
           <Box flexGrow="1">
             <TextArea placeholder="Write a comment…" name='demo' value={demo} style={{ height: 80 }} onChange={handleChange} />
@@ -46,7 +57,10 @@ const Comment = () => {
               </Flex> */}
 
               <Popover.Close>
-                <Button size="1">Comment</Button>
+                <>
+                  <Button color="indigo" className='cursor-pointer' radius='full' size="2" style={{ width: '60px' }}>Edit</Button>
+                  <Button variant="soft" className='cursor-pointer' radius='full' color="gray" size="2">Close</Button>
+                </>
               </Popover.Close>
             </Flex>
           </Box>

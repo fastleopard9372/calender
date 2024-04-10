@@ -21,7 +21,7 @@ const Header = () => {
     dispatch(setDate(moment(new Date(), "MM-DD-YYYY")))
   }
   const handleClickKind = (m_kind: string) => {
-    setKind(m_kind);
+    dispatch(setKind(m_kind));
   }
   const handleDialogOpen = () => {
     dispatch(setIsShowDialog(true))
@@ -81,7 +81,8 @@ const Header = () => {
         </Flex>
         <Tabs.Root defaultValue="kind">
           <Tabs.List>
-            <Tabs.Trigger value="month" onClick={() => handleClickKind("month")}>Month</Tabs.Trigger>
+            <Tabs.Trigger value="month_1" onClick={() => handleClickKind("month_1")}>Month 1</Tabs.Trigger>
+            <Tabs.Trigger value="month_2" onClick={() => handleClickKind("month_2")}>Month 2</Tabs.Trigger>
             <Tabs.Trigger value="week" onClick={() => handleClickKind("week")}>Week</Tabs.Trigger>
           </Tabs.List>
         </Tabs.Root>

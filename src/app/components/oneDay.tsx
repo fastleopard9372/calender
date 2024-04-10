@@ -1,10 +1,10 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { IconButton, Flex, Box, Popover } from '@radix-ui/themes'
 import moment from 'moment'
 
-import { useAppDispatch } from '@/app/redux/hook';
-import { setDateAndPlan } from '@/app/redux/calenderSlice';
+import { useAppDispatch, useAppSelector } from '@/app/redux/hook';
+import { setDateAndPlan, getCalender } from '@/app/redux/calenderSlice';
 
 import TOneDay, { TPlan } from '../type'
 import Comment from './comment'
@@ -17,6 +17,7 @@ const Bar = ({ color, width, position }: { color: string; position: number; widt
   }} top={`calc(50% + ${position}px)`} width={'100%'} height={'0px'}></Box>
 }
 const Conner = ({ no, width, color, position }: { no: number; width?: number; color?: string; position?: number; }) => {
+
   let pos = 0;
   let col = 'gray';
   let wid = 2;
@@ -115,141 +116,144 @@ const Conner = ({ no, width, color, position }: { no: number; width?: number; co
 }
 const OneDay = (prop: TOneDay) => {
   const dispatch = useAppDispatch();
+  const kind = useAppSelector(getCalender).kind;
   const { no, date, month, datesCnt, plan, width, color } = prop;
+  const [sort_plan, setSort_Plan] = useState<TPlan[] | undefined>(undefined);
 
   const handleIconButton = ({ date, plan }: { date: moment.Moment, plan: TPlan[] | undefined }) => {
     dispatch(setDateAndPlan({ date, plan }));
   }
-  const sort_plan: TPlan[] | undefined = plan?.sort((a, b) => a.startDate.isBefore(b.startDate) ? -1 : 1);
   let cornerL = null
   let cornerR = null
   let k = no;
   if (~~(no / 7) % 2) k = ~~(no / 7) * 7 + (6 - no % 7)
-  if (no == 0) {
-    let pos = -width / 2;
-    let connerPlan = sort_plan?.map((v: TPlan, i: number, a: TPlan[]) => {
-      let _pos = pos;
-      for (let j = 0; j <= i; j++) {
-        if (a[j].endDate.clone().weekday(6).isSameOrAfter(date) && a[j].endDate.isSameOrAfter(v.startDate)) {
-          _pos += v.width;
+  if (kind == "month_1") {
+    if (no == 0) {
+      let pos = -width / 2;
+      let connerPlan = sort_plan?.map((v: TPlan, i: number, a: TPlan[]) => {
+        let _pos = pos;
+        for (let j = 0; j <= i; j++) {
+          if (a[j].endDate.clone().weekday(6).isSameOrAfter(date) && a[j].endDate.isSameOrAfter(v.startDate)) {
+            _pos += v.width;
+          }
         }
-      }
-      if (date.isBetween(v.startDate, v.endDate, 'day', "[)")) {
-        return Conner({ no: 0, width: v.width, color: v.color, position: _pos - v.width / 2 })
-      } else return null
-    })
-    cornerL = <Box style={{
-      position: 'relative',
-      width: '50%',
-      height: '100%',
-    }} > {Conner({ no: 0, width })}{connerPlan}</ Box>
-
-  } else if (datesCnt == no + 1) {
-
-    let pos = -width / 2;
-    let connerPlan = sort_plan?.map((v: TPlan, i: number, a: TPlan[]) => {
-      let _pos = pos;
-      for (let j = 0; j <= i; j++) {
-        if (a[j].endDate.clone().weekday(6).isSameOrAfter(date) && a[j].endDate.isSameOrAfter(v.startDate)) {
-          _pos += v.width;
-        }
-      }
-      if (date.isBetween(v.startDate, v.endDate, 'day', "[)")) {
-        return Conner({ no: 1, width: v.width, color: v.color, position: _pos - v.width / 2 })
-      } else return <></>
-    })
-    if (~~(datesCnt / 7) % 2) {
-      // cornerR = Conner({ no: 1, width })
-      cornerR = <Box style={{
-        position: 'relative',
-        width: '50%',
-        height: '100%',
-      }} > {Conner({ no: 1, width })}{connerPlan}</ Box>
-    } else {
-      // cornerL = Conner({ no: 2, width })
+        if (date.isBetween(v.startDate, v.endDate, 'day', "[)")) {
+          return Conner({ no: 0, width: v.width, color: v.color, position: _pos - v.width / 2 })
+        } else return null
+      })
       cornerL = <Box style={{
         position: 'relative',
         width: '50%',
         height: '100%',
-      }} > {Conner({ no: 1, width })}{connerPlan}</ Box>
+      }} > {Conner({ no: 0, width })}{connerPlan}</ Box>
+
+    } else if (datesCnt == no + 1) {
+
+      let pos = -width / 2;
+      let connerPlan = sort_plan?.map((v: TPlan, i: number, a: TPlan[]) => {
+        let _pos = pos;
+        for (let j = 0; j <= i; j++) {
+          if (a[j].endDate.clone().weekday(6).isSameOrAfter(date) && a[j].endDate.isSameOrAfter(v.startDate)) {
+            _pos += v.width;
+          }
+        }
+        if (date.isBetween(v.startDate, v.endDate, 'day', "[)")) {
+          return Conner({ no: 1, width: v.width, color: v.color, position: _pos - v.width / 2 })
+        } else return <></>
+      })
+      if (~~(datesCnt / 7) % 2) {
+        // cornerR = Conner({ no: 1, width })
+        cornerR = <Box style={{
+          position: 'relative',
+          width: '50%',
+          height: '100%',
+        }} > {Conner({ no: 1, width })}{connerPlan}</ Box>
+      } else {
+        // cornerL = Conner({ no: 2, width })
+        cornerL = <Box style={{
+          position: 'relative',
+          width: '50%',
+          height: '100%',
+        }} > {Conner({ no: 1, width })}{connerPlan}</ Box>
+      }
+
+
+    } else if (no % 14 == 13) {
+      let pos = -width / 2;
+      let connerPlan = sort_plan?.map((v: TPlan, i: number, a: TPlan[]) => {
+        let _pos = pos;
+        for (let j = 0; j <= i; j++) {
+          if (a[j].endDate.clone().weekday(6).isSameOrAfter(date) && a[j].endDate.isSameOrAfter(v.startDate)) {
+            _pos += v.width;
+          }
+        }
+        if (date.isBetween(v.startDate, v.endDate, 'day', "[)")) {
+          return Conner({
+            no: 3, width: v.width, color: v.color, position: _pos - v.width / 2
+          })
+        } else return <></>
+      })
+      cornerL = <Box style={{
+        position: 'relative',
+        width: '50%',
+        height: '100%',
+      }} > {Conner({ no: 3, width })}{connerPlan}</ Box>
+    } else if (no % 14 == 0) {
+      let pos = -width / 2;
+      let connerPlan = sort_plan?.map((v: TPlan, i: number, a: TPlan[]) => {
+        let _pos = pos;
+        for (let j = 0; j <= i; j++) {
+          if (a[j].endDate.clone().weekday(6).isSameOrAfter(date) && a[j].endDate.isSameOrAfter(v.startDate)) {
+            _pos += v.width;
+          }
+        }
+        if (date.isBetween(v.startDate, v.endDate, 'day', "(]")) {
+          return Conner({ no: 4, width: v.width, color: v.color, position: _pos - v.width / 2 })
+        } else return <></>
+      })
+      cornerL = <Box style={{
+        position: 'relative',
+        width: '50%',
+        height: '100%',
+      }} > {Conner({ no: 4, width })}{connerPlan}</ Box>
+    } else if (no % 14 == 6) {
+      let pos = -width / 2;
+      let connerPlan = sort_plan?.map((v: TPlan, i: number, a: TPlan[]) => {
+        let _pos = pos;
+        for (let j = 0; j <= i; j++) {
+          if (a[j].endDate.clone().weekday(6).isSameOrAfter(date) && a[j].endDate.isSameOrAfter(v.startDate)) {
+            _pos += v.width;
+          }
+        }
+        if (date.isBetween(v.startDate, v.endDate, 'day', "[)")) {
+          return Conner({ no: 5, width: v.width, color: v.color, position: _pos - v.width / 2 })
+        } else return <></>
+      })
+      cornerR = <Box style={{
+        position: 'relative',
+        width: '50%',
+        height: '100%',
+      }} > {Conner({ no: 5, width })}{connerPlan}</ Box>
+
+    } else if (no % 14 == 7) {
+      let pos = -width / 2;
+      let connerPlan = sort_plan?.map((v: TPlan, i: number, a: TPlan[]) => {
+        let _pos = pos;
+        for (let j = 0; j <= i; j++) {
+          if (a[j].endDate.clone().weekday(6).isSameOrAfter(date) && a[j].endDate.isSameOrAfter(v.startDate)) {
+            _pos += v.width;
+          }
+        }
+        if (date.isBetween(v.startDate, v.endDate, 'day', "(]")) {
+          return Conner({ no: 6, width: v.width, color: v.color, position: _pos - v.width / 2 })
+        } else return <></>
+      })
+      cornerR = <Box style={{
+        position: 'relative',
+        width: '50%',
+        height: '100%',
+      }} > {Conner({ no: 6, width })}{connerPlan}</ Box>
     }
-
-
-  } else if (no % 14 == 13) {
-    let pos = -width / 2;
-    let connerPlan = sort_plan?.map((v: TPlan, i: number, a: TPlan[]) => {
-      let _pos = pos;
-      for (let j = 0; j <= i; j++) {
-        if (a[j].endDate.clone().weekday(6).isSameOrAfter(date) && a[j].endDate.isSameOrAfter(v.startDate)) {
-          _pos += v.width;
-        }
-      }
-      if (date.isBetween(v.startDate, v.endDate, 'day', "[)")) {
-        return Conner({
-          no: 3, width: v.width, color: v.color, position: _pos - v.width / 2
-        })
-      } else return <></>
-    })
-    cornerL = <Box style={{
-      position: 'relative',
-      width: '50%',
-      height: '100%',
-    }} > {Conner({ no: 3, width })}{connerPlan}</ Box>
-  } else if (no % 14 == 0) {
-    let pos = -width / 2;
-    let connerPlan = sort_plan?.map((v: TPlan, i: number, a: TPlan[]) => {
-      let _pos = pos;
-      for (let j = 0; j <= i; j++) {
-        if (a[j].endDate.clone().weekday(6).isSameOrAfter(date) && a[j].endDate.isSameOrAfter(v.startDate)) {
-          _pos += v.width;
-        }
-      }
-      if (date.isBetween(v.startDate, v.endDate, 'day', "(]")) {
-        return Conner({ no: 4, width: v.width, color: v.color, position: _pos - v.width / 2 })
-      } else return <></>
-    })
-    cornerL = <Box style={{
-      position: 'relative',
-      width: '50%',
-      height: '100%',
-    }} > {Conner({ no: 4, width })}{connerPlan}</ Box>
-  } else if (no % 14 == 6) {
-    let pos = -width / 2;
-    let connerPlan = sort_plan?.map((v: TPlan, i: number, a: TPlan[]) => {
-      let _pos = pos;
-      for (let j = 0; j <= i; j++) {
-        if (a[j].endDate.clone().weekday(6).isSameOrAfter(date) && a[j].endDate.isSameOrAfter(v.startDate)) {
-          _pos += v.width;
-        }
-      }
-      if (date.isBetween(v.startDate, v.endDate, 'day', "[)")) {
-        return Conner({ no: 5, width: v.width, color: v.color, position: _pos - v.width / 2 })
-      } else return <></>
-    })
-    cornerR = <Box style={{
-      position: 'relative',
-      width: '50%',
-      height: '100%',
-    }} > {Conner({ no: 5, width })}{connerPlan}</ Box>
-
-  } else if (no % 14 == 7) {
-    let pos = -width / 2;
-    let connerPlan = sort_plan?.map((v: TPlan, i: number, a: TPlan[]) => {
-      let _pos = pos;
-      for (let j = 0; j <= i; j++) {
-        if (a[j].endDate.clone().weekday(6).isSameOrAfter(date) && a[j].endDate.isSameOrAfter(v.startDate)) {
-          _pos += v.width;
-        }
-      }
-      if (date.isBetween(v.startDate, v.endDate, 'day', "(]")) {
-        return Conner({ no: 6, width: v.width, color: v.color, position: _pos - v.width / 2 })
-      } else return <></>
-    })
-    cornerR = <Box style={{
-      position: 'relative',
-      width: '50%',
-      height: '100%',
-    }} > {Conner({ no: 6, width })}{connerPlan}</ Box>
   }
   let pos = -(width == undefined ? 1 : width / 2);
   const main_width = (width == undefined ? 1 : width / 2);
@@ -268,6 +272,14 @@ const OneDay = (prop: TOneDay) => {
     if (v.startDate.isSame(v.endDate) && date.isSame(v.startDate)) {
       planDay = true;
       return <></>;
+    }
+    if (kind == "month_2") {
+      if (date.isSame(v.endDate, 'day')) {
+        return <Bar color={v.color} position={_pos - v.width} width={v.width} />;
+      }
+      if (date.isSame(v.startDate, 'day')) {
+        return <></>
+      }
     }
     if (~~(no / 7) % 2 == 1) {
       if (date.isSame(v.startDate, 'day')) {
@@ -297,13 +309,21 @@ const OneDay = (prop: TOneDay) => {
     if (v.startDate.isSame(v.endDate)) {
       return <></>;
     }
-    if (~~(no / 7) % 2 == 0) {
+    if (kind == "month_2") {
       if (date.isSame(v.startDate, 'day')) {
+        return <Bar color={v.color} position={_pos - v.width} width={v.width} />;
+      }
+      if (date.isSame(v.endDate, 'day')) {
+        return <></>
+      }
+    }
+    if (~~(no / 7) % 2 == 1) {
+      if (date.isSame(v.endDate, 'day')) {
         return <Bar color={v.color} position={_pos - v.width} width={v.width} />;
       }
     }
     else {
-      if (date.isSame(v.endDate, 'day')) {
+      if (date.isSame(v.startDate, 'day')) {
         return <Bar color={v.color} position={_pos - v.width} width={v.width} />;
       }
     }
@@ -322,7 +342,9 @@ const OneDay = (prop: TOneDay) => {
     dateColor = 'coral';
   } else if (sort_plan) {
   }
-
+  useEffect(() => {
+    setSort_Plan(plan?.sort((a, b) => a.startDate.isBefore(b.startDate) ? -1 : 1))
+  }, [plan])
   return (
     <Flex align={'center'} position={'relative'}>
       <Popover.Root>
@@ -338,7 +360,6 @@ const OneDay = (prop: TOneDay) => {
         </Popover.Trigger>
         {<Comment />}
       </Popover.Root>
-
       {cornerL}
       {
         cornerL == null &&

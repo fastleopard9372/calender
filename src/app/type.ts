@@ -3,10 +3,21 @@ import moment from "moment"
 export interface TPlan {
   color: string | 'indigo'
   width: number | 4
-  position?: number
   startDate: moment.Moment,
-  endDate: moment.Moment
-  demo: string
+  endDate: moment.Moment,
+  demo: string,
+  kind: string,
+  title: string,
+  user: {
+    id: string,
+    name: string,
+    email: string
+  }
+}
+export interface TScheduleKind {
+  id: string,
+  name: string,
+  avatar: string
 }
 
 export interface TOneDay {
