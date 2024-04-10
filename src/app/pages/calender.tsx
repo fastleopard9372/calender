@@ -13,12 +13,12 @@ const Calender = ({ date }: { date: moment.Moment }) => {
   const [datesOfMonth, setDatesOfMonth] = useState<JSX.Element>()
 
   const plan: TPlan[] = [
-    { color: 'red', width: 2, startDate: moment("3-28-2024", "MM-DD-YYYY"), endDate: moment("4-6-2024", "MM-DD-YYYY"), title: "title1", demo: "This is my demo1", kind: '', user: { id: '', name: '', email: '' } },
-    { color: 'black', width: 2, startDate: moment("4-3-2024", "MM-DD-YYYY"), endDate: moment("4-16-2024", "MM-DD-YYYY"), title: "This is my tasks.", demo: "This is my demo2", kind: '', user: { id: '', name: '', email: '' } },
-    { color: 'magenta', width: 2, startDate: moment("4-7-2024", "MM-DD-YYYY"), endDate: moment("4-16-2024", "MM-DD-YYYY"), title: "title1", demo: "This is my demo2", kind: '', user: { id: '', name: '', email: '' } },
-    { color: 'blue', width: 2, startDate: moment("4-17-2024", "MM-DD-YYYY"), endDate: moment("4-17-2024", "MM-DD-YYYY"), title: "title1", demo: "This is my demo3", kind: '', user: { id: '', name: '', email: '' } },
-    { color: 'green', width: 2, startDate: moment("4-19-2024", "MM-DD-YYYY"), endDate: moment("5-4-2024", "MM-DD-YYYY"), title: "title1", demo: "This is my demo4", kind: '', user: { id: '', name: '', email: '' } },
-    { color: 'cyan', width: 2, startDate: moment("4-21-2024", "MM-DD-YYYY"), endDate: moment("4-27-2024", "MM-DD-YYYY"), title: "title1", demo: "This is my demo5", kind: '', user: { id: '', name: '', email: '' } }
+    { color: 'red', width: 2, startDate: moment("3-28-2024", "MM-DD-YYYY"), endDate: moment("4-6-2024", "MM-DD-YYYY"), title: "title1", demo: "This is my demo1", kind: 'birthday', user: { id: '', name: '', email: '' } },
+    { color: 'black', width: 2, startDate: moment("4-3-2024", "MM-DD-YYYY"), endDate: moment("4-16-2024", "MM-DD-YYYY"), title: "This is my tasks.", demo: "This is my demo2", kind: 'Meeting', user: { id: '', name: '', email: '' } },
+    { color: 'magenta', width: 2, startDate: moment("4-7-2024", "MM-DD-YYYY"), endDate: moment("4-16-2024", "MM-DD-YYYY"), title: "title1", demo: "This is my demo2", kind: 'Meeting', user: { id: '', name: '', email: '' } },
+    { color: 'blue', width: 2, startDate: moment("4-17-2024", "MM-DD-YYYY"), endDate: moment("4-17-2024", "MM-DD-YYYY"), title: "title1", demo: "This is my demo3", kind: 'Meeting', user: { id: '', name: '', email: '' } },
+    { color: 'green', width: 2, startDate: moment("4-19-2024", "MM-DD-YYYY"), endDate: moment("5-4-2024", "MM-DD-YYYY"), title: "title1", demo: "This is my demo4", kind: 'Meeting', user: { id: '', name: '', email: '' } },
+    { color: 'cyan', width: 2, startDate: moment("4-21-2024", "MM-DD-YYYY"), endDate: moment("4-27-2024", "MM-DD-YYYY"), title: "title1", demo: "This is my demo5", kind: 'Meeting', user: { id: '', name: '', email: '' } }
   ]
   useEffect(() => {
     let startDate = date.clone().startOf('month').startOf('week');

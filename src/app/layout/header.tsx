@@ -4,7 +4,7 @@ import moment from 'moment';
 import { Flex, Tabs, DropdownMenu, Button, IconButton } from '@radix-ui/themes';
 import { ChevronLeftIcon, ChevronRightIcon, PlusIcon } from '@radix-ui/react-icons'
 import { useAppSelector, useAppDispatch } from '@/app/redux/hook';
-import { setDate, setKind, getCalender, setIsShowDialog } from '@/app/redux/calenderSlice';
+import { setDate, setKind, getCalender, setIsShowDialog, setAction } from '@/app/redux/calenderSlice';
 const Header = () => {
   const dispatch = useAppDispatch();
   const { date, isShowDialog } = useAppSelector(getCalender);
@@ -24,6 +24,7 @@ const Header = () => {
     dispatch(setKind(m_kind));
   }
   const handleDialogOpen = () => {
+    dispatch(setAction("Create"))
     dispatch(setIsShowDialog(true))
   }
   return (

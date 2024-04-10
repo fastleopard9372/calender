@@ -10,6 +10,8 @@ const initialState: {
     scheduleKind: TScheduleKind[],
     colors: string[],
     thickness: number[],
+    newPlan: TPlan,
+    action: string,
 } =
 {
     date: moment(new Date(), "MM-DD-YYYY"),
@@ -26,7 +28,22 @@ const initialState: {
     ],
     colors: [
         "red", "green", "blue", "yellow", "orange", "purple", "pink", "teal", "brown", "gray", "cyan", "magenta", "indigo", "lime", "olive", "coral"],
-    thickness: [2, 3, 4, 5, 6]
+    thickness: [2, 3, 4, 5, 6],
+    newPlan: {
+        color: 'indigo',
+        width: 2,
+        startDate: moment(new Date(), "YYYY-MM-DD"),
+        endDate: moment(new Date(), "YYYY-MM-DD"),
+        demo: "",
+        kind: "",
+        title: "",
+        user: {
+            id: "",
+            name: "",
+            email: "",
+        }
+    },
+    action: "create"
 
 };
 export const CalenderSlice = createSlice({
@@ -35,6 +52,12 @@ export const CalenderSlice = createSlice({
     reducers: {
         setDate(state, action) {
             state.date = action.payload
+        },
+        setNewPlan(state, action) {
+            state.newPlan = action.payload
+        },
+        setAction(state, action) {
+            state.action = action.payload
         },
         setKind(state, action) {
             state.kind = action.payload
@@ -59,6 +82,8 @@ export const {
     setDate,
     setKind,
     setPlan,
+    setAction,
+    setNewPlan,
     setDateAndPlan,
     setIsShowDialog,
     setNewScheduleKind,

@@ -1,9 +1,9 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { Popover, Button, Flex, Link, Heading, Text, IconButton, AlertDialog } from '@radix-ui/themes'
+import { Popover, Button, Flex, Link, IconButton, AlertDialog, Badge, Text } from '@radix-ui/themes'
 import { Pencil1Icon, Cross2Icon, TrashIcon } from '@radix-ui/react-icons'
-import { useAppSelector } from '@/app/redux/hook';
-import { getCalender } from '@/app/redux/calenderSlice';
+import { useAppSelector, useAppDispatch } from '@/app/redux/hook';
+import { getCalender, setIsShowDialog, setAction, setNewPlan } from '@/app/redux/calenderSlice';
 import { TPlan } from '../type';
 
 function cutString(str: string) {
@@ -14,15 +14,25 @@ function cutString(str: string) {
 }
 
 const TaskShow = () => {
+  const dispatch = useAppDispatch();
   const { date, plan } = useAppSelector(getCalender);
-  const [data, setData] = useState<TPlan | null>(plan == undefined ? null : plan[0])
+  const [data, setData] = useState<TPlan | undefined>(plan == undefined ? undefined : plan[0])
   const handleDataShow = (i: number) => {
-    setData(plan == undefined ? null : plan[i]);
-
+    setData(plan == undefined ? undefined : plan[i]);
+  }
+  const handleEdit = (data: TPlan | undefined) => {
+    dispatch(setIsShowDialog(true));
+    dispatch(setAction("Edit"));
+    dispatch(setNewPlan(data));
   }
   useEffect(() => {
     if (plan !== undefined) {
-      setData(plan[0]);
+      for (let i = 0; plan.length; i++) {
+        if (date.isBetween(plan[i].startDate, plan[i].endDate, "day", "[]")) {
+          setData(plan[i]);
+          break;
+        }
+      }
     }
   }, [plan])
   return (
@@ -33,7 +43,7 @@ const TaskShow = () => {
             {date.format("YYYY-MM-DD")}
           </div>
           <Flex className='justify-end gap-1 pb-1'>
-            <IconButton size="2" radius='full' variant="soft" className='cursor-pointer'><Pencil1Icon /></IconButton>
+            <IconButton size="2" radius='full' variant="soft" className='cursor-pointer' onClick={e => handleEdit(data)}><Pencil1Icon /></IconButton>
             <AlertDialog.Root>
               <AlertDialog.Trigger>
                 <IconButton size="2" radius='full' variant="soft" className='cursor-pointer'><TrashIcon /></IconButton>
@@ -79,7 +89,9 @@ const TaskShow = () => {
           </Flex>
           <Flex flexGrow="1" direction={"column"} gap={"2"} className='rounded shadow p-2'>
             <Flex direction={"column"} className='text-base font-medium'>
-              {data?.title}
+              <div>
+                {data?.title}&nbsp;&nbsp;&nbsp;<Badge variant="soft" radius="full" color="indigo">{data?.kind}</Badge>
+              </div>
               <div style={{ backgroundColor: data?.color, height: data?.width, }} className='w-100'></div>
             </Flex>
             <Flex direction={"column"} style={{ minHeight: "150px" }}>{data?.demo}</Flex>

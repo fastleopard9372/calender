@@ -12,7 +12,7 @@ import Message from "./message"
 
 const TaskCreate = () => {
   const dispatch = useAppDispatch();
-  const { isShowDialog, scheduleKind, colors, thickness } = useAppSelector(getCalender);
+  const { isShowDialog, scheduleKind, colors, thickness, newPlan, action } = useAppSelector(getCalender);
   const [data, setData] = useState<TPlan>({
     color: 'indigo',
     width: 2,
@@ -103,10 +103,15 @@ const TaskCreate = () => {
     }
   }, [data])
 
+  useEffect(() => {
+    if (action == "")
+      setData(newPlan)
+  }, [action])
+
   return (
     <Dialog.Root open={isShowDialog} onOpenChange={handleOpenChange}>
       <Dialog.Content>
-        <Dialog.Title>Create Schedule</Dialog.Title>
+        <Dialog.Title>{action} Schedule</Dialog.Title>
         {error.open && <Message message={error.message} />}
         <Dialog.Description className='pb-2'>
           <Flex direction="column" gap="3">
