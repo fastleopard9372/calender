@@ -21,9 +21,9 @@ const TaskShow = () => {
     setData(plan == undefined ? undefined : plan[i]);
   }
   const handleEdit = (data: TPlan | undefined) => {
-    dispatch(setIsShowDialog(true));
     dispatch(setAction("Edit"));
     dispatch(setNewPlan(data));
+    dispatch(setIsShowDialog(true));
   }
   useEffect(() => {
     if (plan !== undefined) {

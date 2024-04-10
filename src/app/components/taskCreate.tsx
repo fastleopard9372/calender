@@ -71,7 +71,6 @@ const TaskCreate = () => {
     dispatch(setIsShowDialog(open))
   }
   const handleStartDateChange = (date: moment.Moment) => {
-    console.log(date)
     setData({ ...data, startDate: date })
   }
   const handleEndDateChange = (date: moment.Moment) => {
@@ -104,9 +103,10 @@ const TaskCreate = () => {
   }, [data])
 
   useEffect(() => {
-    if (action == "")
+    console.log(action)
+    if (action == "Edit")
       setData(newPlan)
-  }, [action])
+  }, [isShowDialog, action])
 
   return (
     <Dialog.Root open={isShowDialog} onOpenChange={handleOpenChange}>
@@ -146,7 +146,7 @@ const TaskCreate = () => {
               <Flex direction="column" className='w-full'>
                 <div >Type:</div>
                 <div className='w-full'>
-                  <Select.Root defaultValue={"-1"} onValueChange={handleKind}>
+                  <Select.Root defaultValue={action == "Create" ? "-1" : data.kind} onValueChange={handleKind}>
                     <Select.Trigger />
                     <Select.Content>
                       <Select.Item value={"-1"}>-SELECT-</Select.Item>
@@ -184,7 +184,7 @@ const TaskCreate = () => {
             <Flex direction="column" className='w-full'>
               <div>Line Thickness:</div>
               <Flex className='row gap-2 flex-wrap w-full'>
-                <RadioCards.Root className='w-100' defaultValue={thickness[0].toString()} columns={{ initial: '1', sm: '5' }}>
+                <RadioCards.Root className='w-100' defaultValue={data.width.toString()} columns={{ initial: '1', sm: '5' }}>
                   {thickness.map((v: number, i: number) => (
                     <LineThickness value={v} color={data.color} handleClick={handleLineThicknessClick} />
                   ))}
