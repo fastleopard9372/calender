@@ -10,7 +10,7 @@ import ColorIcon from './colorIcon';
 import LineThickness from './lineThickness';
 import Message from "./message"
 
-const CreateDialog = () => {
+const TaskCreate = () => {
   const dispatch = useAppDispatch();
   const { isShowDialog, scheduleKind, colors, thickness } = useAppSelector(getCalender);
   const [data, setData] = useState<TPlan>({
@@ -189,12 +189,12 @@ const CreateDialog = () => {
           </Flex>
         </Dialog.Description>
         <hr />
-        <Flex gap="3" justify="end" className='pt-1'>
-          <Button variant="soft" color="indigo" onClick={handleSubmit}>
+        <Flex gap="3" justify="end" className='pt-2'>
+          <Button radius='full' color="indigo" onClick={handleSubmit}>
             Submit
           </Button>
           <Dialog.Close>
-            <Button variant="soft" color="gray" onClick={e => {
+            <Button radius='full' color="gray" onClick={e => {
               dispatch(setIsShowDialog(!isShowDialog))
             }}>
               Close
@@ -206,4 +206,4 @@ const CreateDialog = () => {
   )
 }
 
-export default CreateDialog
+export default TaskCreate

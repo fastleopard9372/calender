@@ -1,6 +1,5 @@
 import React from 'react'
 import { RadioCards, Flex, Text } from '@radix-ui/themes';
-import { CheckCircledIcon } from '@radix-ui/react-icons'
 const LineThickness = ({ value, color, handleClick }: { value: number, color: string, handleClick: (state: number) => void; }) => {
     return (
         <RadioCards.Item value={value.toString()} onClick={e => handleClick(value)} className='w-100 p-3'>

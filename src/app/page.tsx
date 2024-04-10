@@ -4,7 +4,7 @@ import Calender from "./pages/calender";
 import MenuBar from "./components/menuBar";
 import Header from "@/app/layout/header";
 import { Animate } from 'react-simple-animate';
-import CreateDialog from "./components/createDialog";
+import TaskCreate from "./components/taskCreate";
 import { getCalender, setDate } from "./redux/calenderSlice";
 import { useAppSelector, useAppDispatch } from "./redux/hook";
 
@@ -38,7 +38,7 @@ export default function Home() {
   return (
     <div className="container mx-auto px-4" onWheel={handleWheel}>
       <Header />
-      <CreateDialog />
+      <TaskCreate />
       <div className='relative overflow-hidden'>
         <Animate
           play={false}

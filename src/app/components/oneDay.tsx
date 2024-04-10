@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from '@/app/redux/hook';
 import { setDateAndPlan, getCalender } from '@/app/redux/calenderSlice';
 
 import TOneDay, { TPlan } from '../type'
-import Comment from './comment'
+import TaskShow from './taskShow'
 
 const Bar = ({ color, width, position }: { color: string; position: number; width?: number }) => {
 
@@ -358,7 +358,7 @@ const OneDay = (prop: TOneDay) => {
             {date.date()}
           </IconButton>
         </Popover.Trigger>
-        {<Comment />}
+        {<TaskShow />}
       </Popover.Root>
       {cornerL}
       {
