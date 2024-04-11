@@ -35,6 +35,7 @@ export default function Home() {
       dispatch(setDate(date.clone().add(direction, kd)));
     }
   }, [isScrolling, direction, kind])
+  console.log(date.format("YYYY-MM-DD"))
   return (
     <div className="container mx-auto px-4" onWheel={handleWheel}>
       <Header />

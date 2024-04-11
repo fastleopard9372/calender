@@ -8,17 +8,16 @@ import OneDay from '../components/oneDay';
 import { TPlan } from '../type';
 
 const Calender = ({ date }: { date: moment.Moment }) => {
-  // const { date } = useAppSelector(getCalender);
   const kind = useAppSelector(getCalender).kind;
   const [datesOfMonth, setDatesOfMonth] = useState<JSX.Element>()
 
   const plan: TPlan[] = [
-    { color: 'red', width: 2, startDate: moment("3-28-2024", "MM-DD-YYYY"), endDate: moment("4-6-2024", "MM-DD-YYYY"), title: "title1", demo: "This is my demo1", kind: 'birthday', user: { id: '', name: '', email: '' } },
-    { color: 'black', width: 2, startDate: moment("4-3-2024", "MM-DD-YYYY"), endDate: moment("4-16-2024", "MM-DD-YYYY"), title: "This is my tasks.", demo: "This is my demo2", kind: 'Meeting', user: { id: '', name: '', email: '' } },
-    { color: 'magenta', width: 2, startDate: moment("4-7-2024", "MM-DD-YYYY"), endDate: moment("4-16-2024", "MM-DD-YYYY"), title: "title1", demo: "This is my demo2", kind: 'Meeting', user: { id: '', name: '', email: '' } },
-    { color: 'blue', width: 2, startDate: moment("4-17-2024", "MM-DD-YYYY"), endDate: moment("4-17-2024", "MM-DD-YYYY"), title: "title1", demo: "This is my demo3", kind: 'Meeting', user: { id: '', name: '', email: '' } },
-    { color: 'green', width: 2, startDate: moment("4-19-2024", "MM-DD-YYYY"), endDate: moment("5-4-2024", "MM-DD-YYYY"), title: "title1", demo: "This is my demo4", kind: 'Meeting', user: { id: '', name: '', email: '' } },
-    { color: 'cyan', width: 2, startDate: moment("4-21-2024", "MM-DD-YYYY"), endDate: moment("4-27-2024", "MM-DD-YYYY"), title: "title1", demo: "This is my demo5", kind: 'Meeting', user: { id: '', name: '', email: '' } }
+    { id: "1", color: 'red', width: 2, startDate: moment("3-28-2024", "MM-DD-YYYY"), endDate: moment("4-6-2024", "MM-DD-YYYY"), title: "title1", demo: "This is my demo1", kind: '1', user: { id: '', name: '', email: '' } },
+    { id: "2", color: 'black', width: 2, startDate: moment("4-3-2024", "MM-DD-YYYY"), endDate: moment("4-16-2024", "MM-DD-YYYY"), title: "This is my tasks.", demo: "This is my demo2", kind: '3', user: { id: '', name: '', email: '' } },
+    { id: "3", color: 'magenta', width: 2, startDate: moment("4-7-2024", "MM-DD-YYYY"), endDate: moment("4-16-2024", "MM-DD-YYYY"), title: "title1", demo: "This is my demo2", kind: '2', user: { id: '', name: '', email: '' } },
+    { id: "4", color: 'blue', width: 2, startDate: moment("4-17-2024", "MM-DD-YYYY"), endDate: moment("4-17-2024", "MM-DD-YYYY"), title: "title1", demo: "This is my demo3", kind: '4', user: { id: '', name: '', email: '' } },
+    { id: "5", color: 'green', width: 2, startDate: moment("4-19-2024", "MM-DD-YYYY"), endDate: moment("5-4-2024", "MM-DD-YYYY"), title: "title1", demo: "This is my demo4", kind: '1', user: { id: '', name: '', email: '' } },
+    { id: "6", color: 'cyan', width: 2, startDate: moment("4-21-2024", "MM-DD-YYYY"), endDate: moment("4-27-2024", "MM-DD-YYYY"), title: "title1", demo: "This is my demo5", kind: '2', user: { id: '', name: '', email: '' } }
   ]
   useEffect(() => {
     let startDate = date.clone().startOf('month').startOf('week');
@@ -68,7 +67,7 @@ const Calender = ({ date }: { date: moment.Moment }) => {
         inner_item.push(<OneDay key={i} {
           ...{
             no: i,
-            date: startDate.clone().add(i, "days"),
+            date: date.clone().add(i, "days"),
             month: date.clone().month(),
             datesCnt: 7,
             width: 2,
@@ -82,8 +81,10 @@ const Calender = ({ date }: { date: moment.Moment }) => {
   }, [date, kind])
   return (
     <>
-      <Grid columns="1" gap="0" width="auto" className={kind == "week" ? "h-[80px]" : "h-[580px]"}>
-        {datesOfMonth}
+      <Grid columns="1" gap="0" width="auto" className={"h-full min-h-[580px]"}>
+        <Grid columns="1" gap="0" width="auto" className={kind == "week" ? "h-[80px]" : "h-[580px]"}>
+          {datesOfMonth}
+        </Grid>
       </Grid>
     </>
   )

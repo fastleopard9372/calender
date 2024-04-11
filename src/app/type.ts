@@ -1,6 +1,7 @@
 import moment from "moment"
 
 export interface TPlan {
+  id: string,
   color: string | 'indigo'
   width: number | 4
   startDate: moment.Moment,

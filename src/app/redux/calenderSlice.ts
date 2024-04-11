@@ -30,12 +30,13 @@ const initialState: {
         "red", "green", "blue", "yellow", "orange", "purple", "pink", "teal", "brown", "gray", "cyan", "magenta", "indigo", "lime", "olive", "coral"],
     thickness: [2, 3, 4, 5, 6],
     newPlan: {
+        id: "",
         color: 'indigo',
         width: 2,
         startDate: moment(new Date(), "YYYY-MM-DD"),
         endDate: moment(new Date(), "YYYY-MM-DD"),
         demo: "",
-        kind: "",
+        kind: "-1",
         title: "",
         user: {
             id: "",
@@ -44,7 +45,6 @@ const initialState: {
         }
     },
     action: "create"
-
 };
 export const CalenderSlice = createSlice({
     name: "Calender",
