@@ -1,31 +1,35 @@
-import moment from "moment"
-
 export interface TPlan {
-  id: string,
+  _id: string,
   color: string | 'indigo'
   width: number | 4
-  startDate: moment.Moment,
-  endDate: moment.Moment,
+  startDate: string,
+  endDate: string,
   demo: string,
   kind: string,
   title: string,
   user: {
     id: string,
-    name: string,
+    username: string,
     email: string
-  }
+  },
+  createdAt: string,
+  updatedAt: string,
+  __v: string
 }
 export interface TScheduleKind {
-  id: string,
+  _id: string,
   name: string,
-  avatar: string
+  avatar: string,
+  created_at?: string,
+  updated_at?: string,
+  __v?: string
 }
 
 export interface TOneDay {
   color?: string | 'indigo'
   width: number
   datesCnt?: number
-  date: moment.Moment,
+  date: string,
   month: number,
   no: number,
   plan?: TPlan[]

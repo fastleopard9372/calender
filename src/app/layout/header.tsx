@@ -7,7 +7,7 @@ import { useAppSelector, useAppDispatch } from '@/app/redux/hook';
 import { setDate, setKind, getCalender, setIsShowDialog, setAction, setNewPlan } from '@/app/redux/calenderSlice';
 const Header = () => {
   const dispatch = useAppDispatch();
-  const { date } = useAppSelector(getCalender);
+  const date = moment(useAppSelector(getCalender).date);
   const handleClickMonth = (kind: moment.unitOfTime.DurationConstructor, value: number) => {
     dispatch(setDate(date.clone().add(value, kind)))
   }
@@ -28,10 +28,10 @@ const Header = () => {
       id: "",
       color: 'indigo',
       width: 2,
-      startDate: moment(new Date(), "YYYY-MM-DD"),
-      endDate: moment(new Date(), "YYYY-MM-DD"),
+      startDate: moment(new Date()).format("YYYY-MM-DD"),
+      endDate: moment(new Date()).format("YYYY-MM-DD"),
       demo: "",
-      kind: "",
+      kind: "-1",
       title: "",
       user: {
         id: "",

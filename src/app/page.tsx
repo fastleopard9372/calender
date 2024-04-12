@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
+import moment from 'moment';
 import Calender from "./pages/calender";
 import MenuBar from "./components/menuBar";
 import Header from "@/app/layout/header";
@@ -10,7 +11,7 @@ import { useAppSelector, useAppDispatch } from "./redux/hook";
 
 export default function Home() {
   const dispatch = useAppDispatch();
-  const date = useAppSelector(getCalender).date;
+  const date = moment(useAppSelector(getCalender).date);
   const kind = useAppSelector(getCalender).kind;
   const [isScrolling, setIsScrolling] = useState(false);
   const [direction, setDirection] = useState(0);
@@ -34,8 +35,8 @@ export default function Home() {
       else kd = "months";
       dispatch(setDate(date.clone().add(direction, kd)));
     }
-  }, [isScrolling, direction, kind])
-  console.log(date.format("YYYY-MM-DD"))
+  }, [isScrolling, direction])
+
   return (
     <div className="container mx-auto px-4" onWheel={handleWheel}>
       <Header />
@@ -46,7 +47,7 @@ export default function Home() {
           start={{ transform: 'translate(0, 0)' }}
           end={{ transform: 'translate(0, 0)' }}
           duration={0.5}
-          render={({ style }) => <div style={style}><Calender date={date} /></div>}
+          render={({ style }) => <div style={style}><Calender /></div>}
         />
       </div>
       {/* <MenuBar /> */}

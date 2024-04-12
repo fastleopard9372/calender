@@ -3,7 +3,7 @@ import moment from 'moment';
 import { RootState } from './store';
 import { TPlan, TScheduleKind } from '../type';
 const initialState: {
-    date: moment.Moment,
+    date: string,
     kind: string,
     plan: TPlan[] | undefined,
     isShowDialog: boolean,
@@ -14,35 +14,31 @@ const initialState: {
     action: string,
 } =
 {
-    date: moment(new Date(), "MM-DD-YYYY"),
+    date: moment(new Date()).format("MM-DD-YYYY"),
     kind: "month_1",
     plan: undefined,
     isShowDialog: false,
-    scheduleKind: [
-        { id: "1", name: "Birthday", avatar: "" },
-        { id: "2", name: "Meeting", avatar: "" },
-        { id: "3", name: "Holiday", avatar: "" },
-        { id: "4", name: "Work", avatar: "" },
-        { id: "5", name: "Travel", avatar: "" },
-        { id: "6", name: "Memory", avatar: "" },
-    ],
+    scheduleKind: [],
     colors: [
         "red", "green", "blue", "yellow", "orange", "purple", "pink", "teal", "brown", "gray", "cyan", "magenta", "indigo", "lime", "olive", "coral"],
     thickness: [2, 3, 4, 5, 6],
     newPlan: {
-        id: "",
+        _id: "",
         color: 'indigo',
         width: 2,
-        startDate: moment(new Date(), "YYYY-MM-DD"),
-        endDate: moment(new Date(), "YYYY-MM-DD"),
+        startDate: moment(new Date()).format("YYYY-MM-DD"),
+        endDate: moment(new Date()).format("YYYY-MM-DD"),
         demo: "",
         kind: "-1",
         title: "",
         user: {
             id: "",
-            name: "",
+            username: "",
             email: "",
-        }
+        },
+        __v: "",
+        createdAt: "",
+        updatedAt: ""
     },
     action: "create"
 };
@@ -72,9 +68,13 @@ export const CalenderSlice = createSlice({
         setIsShowDialog(state, action) {
             state.isShowDialog = action.payload
         },
-        setNewScheduleKind(state, action) {
+        addNewScheduleKind(state, action) {
             state.scheduleKind.push(action.payload)
+        },
+        getScheduleKind(state, action) {
+            state.scheduleKind = action.payload;
         }
+
     }
 });
 
@@ -86,7 +86,8 @@ export const {
     setNewPlan,
     setDateAndPlan,
     setIsShowDialog,
-    setNewScheduleKind,
+    addNewScheduleKind,
+    getScheduleKind,
 } = CalenderSlice.actions;
 export const getCalender = (state: RootState) => state.Calender;
 

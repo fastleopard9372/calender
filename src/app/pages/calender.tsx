@@ -3,87 +3,130 @@ import React, { useEffect, useState } from 'react'
 import moment from 'moment';
 import { Grid } from '@radix-ui/themes';
 import { useAppSelector, useAppDispatch } from '@/app/redux/hook';
-import { getCalender } from '@/app/redux/calenderSlice';
+import { getCalender, getScheduleKind } from '@/app/redux/calenderSlice';
+import { getSchedulesAPI, getScheduleKindAPI } from '../api/schedule';
 import OneDay from '../components/oneDay';
 import { TPlan } from '../type';
 
-const Calender = ({ date }: { date: moment.Moment }) => {
-  const kind = useAppSelector(getCalender).kind;
-  const [datesOfMonth, setDatesOfMonth] = useState<JSX.Element>()
 
-  const plan: TPlan[] = [
-    { id: "1", color: 'red', width: 2, startDate: moment("3-28-2024", "MM-DD-YYYY"), endDate: moment("4-6-2024", "MM-DD-YYYY"), title: "title1", demo: "This is my demo1", kind: '1', user: { id: '', name: '', email: '' } },
-    { id: "2", color: 'black', width: 2, startDate: moment("4-3-2024", "MM-DD-YYYY"), endDate: moment("4-16-2024", "MM-DD-YYYY"), title: "This is my tasks.", demo: "This is my demo2", kind: '3', user: { id: '', name: '', email: '' } },
-    { id: "3", color: 'magenta', width: 2, startDate: moment("4-7-2024", "MM-DD-YYYY"), endDate: moment("4-16-2024", "MM-DD-YYYY"), title: "title1", demo: "This is my demo2", kind: '2', user: { id: '', name: '', email: '' } },
-    { id: "4", color: 'blue', width: 2, startDate: moment("4-17-2024", "MM-DD-YYYY"), endDate: moment("4-17-2024", "MM-DD-YYYY"), title: "title1", demo: "This is my demo3", kind: '4', user: { id: '', name: '', email: '' } },
-    { id: "5", color: 'green', width: 2, startDate: moment("4-19-2024", "MM-DD-YYYY"), endDate: moment("5-4-2024", "MM-DD-YYYY"), title: "title1", demo: "This is my demo4", kind: '1', user: { id: '', name: '', email: '' } },
-    { id: "6", color: 'cyan', width: 2, startDate: moment("4-21-2024", "MM-DD-YYYY"), endDate: moment("4-27-2024", "MM-DD-YYYY"), title: "title1", demo: "This is my demo5", kind: '2', user: { id: '', name: '', email: '' } }
-  ]
-  useEffect(() => {
-    let startDate = date.clone().startOf('month').startOf('week');
-    let endDate = date.clone().endOf('month').endOf('week');
-    let datesCnt = endDate.diff(startDate, 'days') + 1;
-    let day: JSX.Element[] = [];
-    if (kind == "month_1")
-      for (let i = 0; i < datesCnt / 7; i++) {
-        let inner_item: JSX.Element[] = [];
-        for (let j = 0; j < 7; j++) {
-          let k = j;
-          if (i % 2)
-            k = 6 - j
-          inner_item.push(<OneDay key={i * 7 + k} {
-            ...{
-              no: i * 7 + k,
-              date: startDate.clone().add(i * 7 + k, "days"),
-              month: date.clone().month(),
-              datesCnt,
-              width: 2,
-              plan
-            }} />);
-        }
-        day.push(<Grid columns="7" key={i} gap="0" width="auto">{inner_item}
-        </Grid>);
-      }
-    else if (kind == "month_2") {
-      for (let i = 0; i < datesCnt / 7; i++) {
-        let inner_item: JSX.Element[] = [];
-        for (let j = 0; j < 7; j++) {
-          inner_item.push(<OneDay key={i * 7 + j} {
-            ...{
-              no: i * 7 + j,
-              date: startDate.clone().add(i * 7 + j, "days"),
-              month: date.clone().month(),
-              datesCnt,
-              width: 2,
-              plan
-            }} />);
-        }
-        day.push(<Grid columns="7" key={i} gap="0" width="auto">{inner_item}
-        </Grid>);
-      }
-    } else if (kind == "week") {
+const DatesOfMonth = (
+  { startDate, endDate, date, kind, plan }
+    :
+    {
+      startDate: moment.Moment,
+      endDate: moment.Moment,
+      date: moment.Moment,
+      kind: string,
+      plan: TPlan[] | undefined
+    }) => {
+  let datesCnt = endDate.diff(startDate, 'days') + 1;
+  let day: JSX.Element[] = [];
+  if (kind == "month_1") {
+    for (let i = 0; i < datesCnt / 7; i++) {
       let inner_item: JSX.Element[] = [];
-      for (let i = 0; i < 7; i++) {
-        inner_item.push(<OneDay key={i} {
+      for (let j = 0; j < 7; j++) {
+        let k = j;
+        if (i % 2)
+          k = 6 - j
+        inner_item.push(<OneDay key={i * 7 + k} {
           ...{
-            no: i,
-            date: date.clone().add(i, "days"),
+            no: i * 7 + k,
+            date: startDate.clone().add(i * 7 + k, "days").format("YYYY-MM-DD"),
             month: date.clone().month(),
-            datesCnt: 7,
+            datesCnt,
             width: 2,
             plan
           }} />);
       }
-      day.push(<Grid columns="7" gap="0" width="auto">{inner_item}
+      day.push(<Grid columns="7" key={i} gap="0" width="auto">{inner_item}
       </Grid>);
     }
-    setDatesOfMonth(<>{day}</>);
-  }, [date, kind])
+  } else if (kind == "month_2") {
+    for (let i = 0; i < datesCnt / 7; i++) {
+      let inner_item: JSX.Element[] = [];
+      for (let j = 0; j < 7; j++) {
+        inner_item.push(<OneDay key={i * 7 + j} {
+          ...{
+            no: i * 7 + j,
+            date: startDate.clone().add(i * 7 + j, "days").format("YYYY-MM-DD"),
+            month: date.clone().month(),
+            datesCnt,
+            width: 2,
+            plan
+          }} />);
+      }
+      day.push(<Grid columns="7" key={i} gap="0" width="auto">{inner_item}
+      </Grid>);
+    }
+  } else if (kind == "week") {
+    let inner_item: JSX.Element[] = [];
+    for (let i = 0; i < 7; i++) {
+      inner_item.push(<OneDay key={i} {
+        ...{
+          no: i,
+          date: date.clone().add(i, "days").format("YYYY-MM-DD"),
+          month: date.clone().month(),
+          datesCnt: 7,
+          width: 2,
+          plan
+        }} />);
+    }
+    day.push(<Grid columns="7" gap="0" width="auto">{inner_item}
+    </Grid>);
+  }
+  return <>{day}</>;
+}
+const Calender = () => {
+  const calender_data = useAppSelector(getCalender);
+  const kind = calender_data.kind;
+  const date = moment(calender_data.date);
+  const dispatch = useAppDispatch();
+  const startDate = date.clone().startOf('month').startOf('week');
+  const endDate = date.clone().endOf('month').endOf('week');
+  const [plan, setPlan] = useState<TPlan[] | undefined>(undefined)
+  // const plan: TPlan[] = [
+  //   {
+  //     _id: "1", color: 'red', width: 2, startDate: "2024-03-29", endDate: "2024-04-16", title: "title1", demo: "This is my demo1", kind: '1', user: { id: '', username: '', email: '' },
+  //     createdAt: '',
+  //     updatedAt: '',
+  //     __v: ''
+  //   }, {
+  //     _id: "1", color: 'red', width: 2, startDate: "2024-03-29", endDate: "2024-04-16", title: "title1", demo: "This is my demo1", kind: '1', user: { id: '', username: '', email: '' },
+  //     createdAt: '',
+  //     updatedAt: '',
+  //     __v: ''
+  //   }, {
+  //     _id: "1", color: 'red', width: 2, startDate: "2024-03-29", endDate: "2024-04-16", title: "title1", demo: "This is my demo1", kind: '1', user: { id: '', username: '', email: '' },
+  //     createdAt: '',
+  //     updatedAt: '',
+  //     __v: ''
+  //   }, {
+  //     _id: "1", color: 'red', width: 2, startDate: "2024-03-29", endDate: "2024-04-16", title: "title1", demo: "This is my demo1", kind: '1', user: { id: '', username: '', email: '' },
+  //     createdAt: '',
+  //     updatedAt: '',
+  //     __v: ''
+  //   }, {
+  //     _id: "1", color: 'red', width: 2, startDate: "2024-03-29", endDate: "2024-04-16", title: "title1", demo: "This is my demo1", kind: '1', user: { id: '', username: '', email: '' },
+  //     createdAt: '',
+  //     updatedAt: '',
+  //     __v: ''
+  //   },
+  // ]
+  useEffect(() => {
+    getSchedulesAPI({ startDate, endDate }).then((schedules: any) => {
+      setPlan(schedules.data);
+    })
+  }, [calender_data.date, kind])
+  useEffect(() => {
+    getScheduleKindAPI().then((scheduleKind: any) => {
+      dispatch(getScheduleKind(scheduleKind.data));
+    })
+  }, [])
   return (
     <>
       <Grid columns="1" gap="0" width="auto" className={"h-full min-h-[580px]"}>
         <Grid columns="1" gap="0" width="auto" className={kind == "week" ? "h-[80px]" : "h-[580px]"}>
-          {datesOfMonth}
+          <DatesOfMonth startDate={startDate} date={date} endDate={endDate} kind={kind} plan={plan} />
         </Grid>
       </Grid>
     </>

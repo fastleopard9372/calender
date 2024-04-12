@@ -29,7 +29,7 @@ const TaskCreate = () => {
     dispatch(setIsShowDialog(open))
   }
   const handleSubmit = () => {
-    if (newPlan.endDate.isBefore(newPlan.startDate)) {
+    if (moment(newPlan.endDate).isBefore(newPlan.startDate)) {
       setError({
         message: "End date must be after start date",
         open: true
@@ -54,14 +54,13 @@ const TaskCreate = () => {
         open: true
       })
     }
-
     dispatch(setIsShowDialog(open))
   }
   const handleStartDateChange = (date: moment.Moment) => {
-    dispatch(setNewPlan({ ...newPlan, startDate: date }))
+    dispatch(setNewPlan({ ...newPlan, startDate: date.format("YYYY-MM-DD") }))
   }
   const handleEndDateChange = (date: moment.Moment) => {
-    dispatch(setNewPlan({ ...newPlan, endDate: date }))
+    dispatch(setNewPlan({ ...newPlan, endDate: date.format("YYYY-MM-DD") }))
   }
   const handleKind = (value: string) => {
     dispatch(setNewPlan({ ...newPlan, kind: value }))
@@ -100,11 +99,11 @@ const TaskCreate = () => {
                 Start Date:
                 <div>
                   <DatePicker
-                    selected={newPlan.startDate.toDate()}
+                    selected={moment(newPlan.startDate).toDate()}
                     onChange={(startDate: Date) => handleStartDateChange(moment(startDate))}
                     selectsStart
-                    startDate={newPlan.startDate.toDate()}
-                    endDate={newPlan.endDate.toDate()}
+                    startDate={moment(newPlan.startDate).toDate()}
+                    endDate={moment(newPlan.endDate).toDate()}
                   />
                 </div>
                 {/* <Text
@@ -114,12 +113,12 @@ const TaskCreate = () => {
                 End Date:
                 <div>
                   <DatePicker
-                    selected={newPlan.endDate.toDate()}
+                    selected={moment(newPlan.endDate).toDate()}
                     onChange={(endDate: Date) => handleEndDateChange(moment(endDate))}
                     selectsEnd
-                    startDate={newPlan.startDate.toDate()}
-                    endDate={newPlan.endDate.toDate()}
-                    minDate={newPlan.startDate.toDate()}
+                    startDate={moment(newPlan.startDate).toDate()}
+                    endDate={moment(newPlan.endDate).toDate()}
+                    minDate={moment(newPlan.startDate).toDate()}
                   />
                 </div>
               </Flex>
@@ -132,7 +131,7 @@ const TaskCreate = () => {
                       <Select.Item value={"-1"}>-SELECT-</Select.Item>
                       <Select.Group>
                         {scheduleKind.map((v: TScheduleKind, i: number) => (
-                          <Select.Item key={i} value={v.id}>{v.name}</Select.Item>
+                          <Select.Item key={i} value={v._id}>{v.name}</Select.Item>
                         ))}
                       </Select.Group>
                     </Select.Content>
@@ -157,7 +156,7 @@ const TaskCreate = () => {
               <div>Line Color:</div>
               <Flex className='row gap-2 flex-wrap w-full'>
                 {colors.map((v: string, i: number) => (
-                  <ColorIcon value={v} selected={v === newPlan.color} handleClick={handleColorClick} />
+                  <ColorIcon key={i} value={v} selected={v === newPlan.color} handleClick={handleColorClick} />
                 ))}
               </Flex>
             </Flex>
@@ -166,7 +165,7 @@ const TaskCreate = () => {
               <Flex className='row gap-2 flex-wrap w-full'>
                 <RadioCards.Root className='w-100' defaultValue={newPlan.width.toString()} columns={{ initial: '1', sm: '5' }}>
                   {thickness.map((v: number, i: number) => (
-                    <LineThickness value={v} color={newPlan.color} handleClick={handleLineThicknessClick} />
+                    <LineThickness key={i} value={v} color={newPlan.color} handleClick={handleLineThicknessClick} />
                   ))}
                 </RadioCards.Root>
               </Flex>

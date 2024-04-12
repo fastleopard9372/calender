@@ -17,7 +17,8 @@ function cutString(str: string) {
 
 const TaskShow = () => {
   const dispatch = useAppDispatch();
-  const { date, plan, scheduleKind } = useAppSelector(getCalender);
+  const { plan, scheduleKind } = useAppSelector(getCalender);
+  const date = moment(useAppSelector(getCalender).date)
   const [data, setData] = useState<TPlan | undefined>(plan == undefined ? undefined : plan[0])
   const handleDataShow = (i: number) => {
     setData(plan == undefined ? undefined : plan[i]);
@@ -32,8 +33,8 @@ const TaskShow = () => {
       id: "",
       color: 'indigo',
       width: 2,
-      startDate: date,
-      endDate: date,
+      startDate: date.format("YYYY-MM-DD"),
+      endDate: date.format("YYYY-MM-DD"),
       demo: "",
       kind: "",
       title: "",
@@ -66,7 +67,7 @@ const TaskShow = () => {
       }
     }
   }, [plan])
-  const temp = scheduleKind.find((v: TScheduleKind) => data?.kind == v.id);
+  const temp = scheduleKind.find((v: TScheduleKind) => data?.kind == v._id);
   const kind = temp == undefined ? "-1" : temp.name
 
   return (
@@ -81,7 +82,7 @@ const TaskShow = () => {
             {data &&
               <>
                 <IconButton size="2" radius='full' variant="soft" className='cursor-pointer' onClick={e => handleEdit(data)}><Pencil1Icon /></IconButton>
-                <Alert title="Information" text="Do you remove this task really?" handleCancel={handleDeleteCancel} handleOk={e => handleDeleteOk(data.id)}>
+                <Alert title="Information" text="Do you remove this task really?" handleCancel={handleDeleteCancel} handleOk={e => handleDeleteOk(data._id)}>
                   <IconButton size="2" radius='full' variant="soft" className='cursor-pointer'><TrashIcon /></IconButton>
                 </Alert>
               </>
@@ -117,9 +118,9 @@ const TaskShow = () => {
             <Flex direction={"column"} style={{ minHeight: "180px" }}>{data?.demo}</Flex>
             <Flex direction={"column"} className='text-sm' style={{ color: 'gray ' }}>
               {
-                data != undefined && (data?.endDate.isSame(data.startDate) ?
-                  `${data?.startDate.format("YYYY-MM-DD")}` :
-                  `${data?.startDate.format("YYYY-MM-DD")} ~ ${data?.endDate.format("YYYY-MM-DD")} (${data?.endDate.diff(data?.startDate, 'days')} days)`)
+                data != undefined && (moment(data?.endDate).isSame(moment(data.startDate)) ?
+                  `${moment(data?.startDate).format("YYYY-MM-DD")}` :
+                  `${moment(data?.startDate).format("YYYY-MM-DD")} ~ ${moment(data?.endDate).format("YYYY-MM-DD")} (${moment(data?.endDate).diff(moment(data?.startDate), 'days') + 1} days)`)
               }
             </Flex>
           </Flex>
