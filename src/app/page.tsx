@@ -5,9 +5,11 @@ import Calender from "./pages/calender";
 import MenuBar from "./components/menuBar";
 import Header from "@/app/layout/header";
 import { Animate } from 'react-simple-animate';
+import { ToastContainer } from 'react-toastify';
 import TaskCreate from "./components/taskCreate";
 import { getCalender, setDate } from "./redux/calenderSlice";
 import { useAppSelector, useAppDispatch } from "./redux/hook";
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Home() {
   const dispatch = useAppDispatch();
@@ -51,6 +53,18 @@ export default function Home() {
         />
       </div> */}
       <Calender />
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
       {/* <MenuBar /> */}
     </div >
   );

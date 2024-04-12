@@ -3,10 +3,11 @@ import React, { useEffect, useState } from 'react'
 import { Dialog, Button, Flex, TextArea, TextField, Select, RadioCards } from '@radix-ui/themes'
 import DatePicker from "react-datepicker";
 import moment from 'moment';
-import { TScheduleKind } from '../type';
+import { toast } from 'react-toastify';
+import { TPlan, TScheduleKind } from '../type';
 import { useAppDispatch, useAppSelector } from '../redux/hook'
-import { setIsShowDialog, getCalender, setNewPlan, updatePlan } from '../redux/calenderSlice'
-import { updateScheduleAPI } from '../api/schedule'
+import { setIsShowDialog, getCalender, updatePlan, addPlan } from '../redux/calenderSlice'
+import { updateScheduleAPI, addScheduleAPI } from '../api/schedule'
 import ColorIcon from './colorIcon';
 import LineThickness from './lineThickness';
 import Message from "./message"
@@ -15,72 +16,90 @@ const TaskCreate = () => {
   const dispatch = useAppDispatch();
   const { isShowDialog, scheduleKind, colors, thickness, newPlan, action } = useAppSelector(getCalender);
 
+  const [data, setData] = useState<TPlan>(newPlan)
   const [error, setError] = useState({
     message: "",
     open: false
   })
-
   const handleColorClick = (e: string) => {
-    dispatch(setNewPlan({ ...newPlan, color: e }))
+    setData({ ...data, color: e })
   }
   const handleLineThicknessClick = (e: number) => {
-    dispatch(setNewPlan({ ...newPlan, width: e }))
+    setData({ ...data, width: e })
   }
   const handleOpenChange = (open: boolean) => {
     dispatch(setIsShowDialog(open))
   }
   const handleSubmit = () => {
-    if (moment(newPlan.endDate).isBefore(newPlan.startDate)) {
+    if (moment(data.endDate).isBefore(data.startDate)) {
       setError({
         message: "End date must be after start date",
         open: true
       })
       return
     }
-    if (newPlan.kind == "-1" || newPlan.kind == "") {
+    if (data.kind == "-1" || data.kind == "") {
       setError({
         message: "Kind must be selected",
         open: true
       })
+      return
     }
-    if (newPlan.title == "") {
+    if (data.title == "") {
       setError({
         message: "Title must be required",
         open: true
       })
+      return
     }
-    if (newPlan.demo == "") {
+    if (data.demo == "") {
       setError({
         message: "Demo must be required",
         open: true
       })
+      return
     }
-    updateScheduleAPI(newPlan).then((schedule) => {
-      dispatch(updatePlan(schedule.data))
-      dispatch(setNewPlan(schedule.data))
-      dispatch(setIsShowDialog(!isShowDialog))
-    }).catch(() => {
-      setError({
-        message: "Server Error.",
-        open: true
+    if (action == "Edit") {
+      updateScheduleAPI(data).then((schedule) => {
+        dispatch(updatePlan(schedule.data))
+        dispatch(setIsShowDialog(!isShowDialog))
+        toast.info("Plan is updated");
+      }).catch(() => {
+        setError({
+          message: "Server Error.",
+          open: true
+        })
       })
-    })
+    } else if ("Create") {
+      addScheduleAPI(data).then((schedule) => {
+        dispatch(addPlan(schedule.data))
+        dispatch(setIsShowDialog(!isShowDialog))
+        toast.info("Plan is added newly");
+      }).catch(() => {
+        setError({
+          message: "Server Error.",
+          open: true
+        })
+      })
+    }
   }
   const handleStartDateChange = (date: moment.Moment) => {
-    dispatch(setNewPlan({ ...newPlan, startDate: date.format("YYYY-MM-DD") }))
+    setData({ ...data, startDate: date.format("YYYY-MM-DD") })
   }
   const handleEndDateChange = (date: moment.Moment) => {
-    dispatch(setNewPlan({ ...newPlan, endDate: date.format("YYYY-MM-DD") }))
+    setData({ ...data, endDate: date.format("YYYY-MM-DD") })
   }
   const handleKind = (value: string) => {
-    dispatch(setNewPlan({ ...newPlan, kind: value }))
+    setData({ ...data, kind: value })
   }
   const handleInputChange = (e: any) => {
-    dispatch(setNewPlan({ ...newPlan, [e.target.name]: e.target.value }))
+    console.log(e.target.value)
+    setData({ ...data, [e.target.name]: e.target.value })
   }
 
   useEffect(() => {
-    if (newPlan.kind == "-1") {
+    console.log("new plan")
+    if (data.kind == "-1") {
       setError({
         message: "Kind must be started",
         open: true
@@ -96,6 +115,7 @@ const TaskCreate = () => {
     } else {
       setError({ message: "", open: false })
     }
+    setData(newPlan);
   }, [newPlan])
   return (
     <Dialog.Root open={isShowDialog} onOpenChange={handleOpenChange}>
@@ -109,11 +129,11 @@ const TaskCreate = () => {
                 Start Date:
                 <div>
                   <DatePicker
-                    selected={moment(newPlan.startDate).toDate()}
+                    selected={moment(data.startDate).toDate()}
                     onChange={(startDate: Date) => handleStartDateChange(moment(startDate))}
                     selectsStart
-                    startDate={moment(newPlan.startDate).toDate()}
-                    endDate={moment(newPlan.endDate).toDate()}
+                    startDate={moment(data.startDate).toDate()}
+                    endDate={moment(data.endDate).toDate()}
                   />
                 </div>
                 {/* <Text
@@ -123,19 +143,19 @@ const TaskCreate = () => {
                 End Date:
                 <div>
                   <DatePicker
-                    selected={moment(newPlan.endDate).toDate()}
+                    selected={moment(data.endDate).toDate()}
                     onChange={(endDate: Date) => handleEndDateChange(moment(endDate))}
                     selectsEnd
-                    startDate={moment(newPlan.startDate).toDate()}
-                    endDate={moment(newPlan.endDate).toDate()}
-                    minDate={moment(newPlan.startDate).toDate()}
+                    startDate={moment(data.startDate).toDate()}
+                    endDate={moment(data.endDate).toDate()}
+                    minDate={moment(data.startDate).toDate()}
                   />
                 </div>
               </Flex>
               <Flex direction="column" className='w-full'>
                 <div >Type:</div>
                 <div className='w-full'>
-                  <Select.Root defaultValue={newPlan.kind} value={newPlan.kind} onValueChange={handleKind}>
+                  <Select.Root defaultValue={data.kind} value={data.kind} onValueChange={handleKind}>
                     <Select.Trigger />
                     <Select.Content>
                       <Select.Item value={"-1"}>-SELECT-</Select.Item>
@@ -152,30 +172,30 @@ const TaskCreate = () => {
             <Flex direction="column">
               <div>Title:</div>
               <div>
-                <TextField.Root autoFocus={true} size="2" placeholder="Title" name="title" value={newPlan.title} onChange={handleInputChange} />
+                <TextField.Root autoFocus={true} size="2" placeholder="Title" name="title" value={data.title} onChange={handleInputChange} />
               </div>
             </Flex>
             <Flex direction="column" className='w-full'>
               <div>Demo:</div>
               <div className='w-full'>
                 <TextArea className='w-full'
-                  value={newPlan.demo} rows={5} placeholder='Demo' name="demo" onChange={handleInputChange} ></TextArea>
+                  value={data.demo} rows={5} placeholder='Demo' name="demo" onChange={handleInputChange} ></TextArea>
               </div>
             </Flex>
             <Flex direction="column" className='w-full'>
               <div>Line Color:</div>
               <Flex className='row gap-2 flex-wrap w-full'>
                 {colors.map((v: string, i: number) => (
-                  <ColorIcon key={i} value={v} selected={v === newPlan.color} handleClick={handleColorClick} />
+                  <ColorIcon key={i} value={v} selected={v === data.color} handleClick={handleColorClick} />
                 ))}
               </Flex>
             </Flex>
             <Flex direction="column" className='w-full'>
               <div>Line Thickness:</div>
               <Flex className='row gap-2 flex-wrap w-full'>
-                <RadioCards.Root className='w-100' defaultValue={newPlan.width.toString()} columns={{ initial: '1', sm: '5' }}>
+                <RadioCards.Root className='w-100' defaultValue={data.width.toString()} columns={{ initial: '1', sm: '5' }}>
                   {thickness.map((v: number, i: number) => (
-                    <LineThickness key={i} value={v} color={newPlan.color} handleClick={handleLineThicknessClick} />
+                    <LineThickness key={i} value={v} color={data.color} handleClick={handleLineThicknessClick} />
                   ))}
                 </RadioCards.Root>
               </Flex>

@@ -3,8 +3,10 @@ import React, { useEffect, useState } from 'react'
 import { Popover, Flex, Link, IconButton, Badge, Text } from '@radix-ui/themes'
 import { Pencil1Icon, Cross2Icon, TrashIcon, PlusIcon } from '@radix-ui/react-icons'
 import moment from 'moment'
+import { toast } from 'react-toastify';
 import { useAppSelector, useAppDispatch } from '@/app/redux/hook';
-import { getCalender, setIsShowDialog, setAction, setNewPlan } from '@/app/redux/calenderSlice';
+import { getCalender, setIsShowDialog, setAction, setNewPlan, deletePlan } from '@/app/redux/calenderSlice';
+import { deleteScheduleAPI } from '../api/schedule'
 import Alert from './alert';
 import { TPlan, TScheduleKind } from '../type';
 
@@ -50,8 +52,13 @@ const TaskShow = () => {
   const handleDeleteCancel = () => {
 
   }
-  const handleDeleteOk = (id: string | undefined) => {
-    console.log(id)
+  const handleDeleteOk = (id: string) => {
+    deleteScheduleAPI(id).then((schedule) => {
+      dispatch(deletePlan(schedule.data.id))
+      toast.info("Plan is deleted");
+    }).catch(() => {
+
+    })
   }
   useEffect(() => {
     if (plan !== undefined) {
