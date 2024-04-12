@@ -9,16 +9,16 @@ const Header = () => {
   const dispatch = useAppDispatch();
   const date = moment(useAppSelector(getCalender).date);
   const handleClickMonth = (kind: moment.unitOfTime.DurationConstructor, value: number) => {
-    dispatch(setDate(date.clone().add(value, kind)))
+    dispatch(setDate(date.clone().add(value, kind).format("YYYY-MM-DD")))
   }
   const handleClickMonthD = (value: number) => {
-    dispatch(setDate(date.clone().month(value)))
+    dispatch(setDate(date.clone().month(value).format("YYYY-MM-DD")))
   }
   const handleClickYear = (year: number) => {
-    dispatch(setDate(date.clone().year(year)))
+    dispatch(setDate(date.clone().year(year).format("YYYY-MM-DD")))
   }
   const handleClickToday = () => {
-    dispatch(setDate(moment(new Date(), "MM-DD-YYYY")))
+    dispatch(setDate(moment(new Date()).format("MM-DD-YYYY")))
   }
   const handleClickKind = (m_kind: string) => {
     dispatch(setKind(m_kind));

@@ -33,7 +33,7 @@ export default function Home() {
       let kd: moment.unitOfTime.DurationConstructor = "days";
       if (kind == "week") kd = "days";
       else kd = "months";
-      dispatch(setDate(date.clone().add(direction, kd)));
+      dispatch(setDate(date.clone().add(direction, kd).format("YYYY-MM-DD")));
     }
   }, [isScrolling, direction])
 
@@ -41,7 +41,7 @@ export default function Home() {
     <div className="container mx-auto px-4" onWheel={handleWheel}>
       <Header />
       <TaskCreate />
-      <div className='relative overflow-hidden'>
+      {/* <div className='relative overflow-hidden'>
         <Animate
           play={false}
           start={{ transform: 'translate(0, 0)' }}
@@ -49,7 +49,8 @@ export default function Home() {
           duration={0.5}
           render={({ style }) => <div style={style}><Calender /></div>}
         />
-      </div>
+      </div> */}
+      <Calender />
       {/* <MenuBar /> */}
     </div >
   );

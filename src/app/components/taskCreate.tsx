@@ -3,9 +3,10 @@ import React, { useEffect, useState } from 'react'
 import { Dialog, Button, Flex, TextArea, TextField, Select, RadioCards } from '@radix-ui/themes'
 import DatePicker from "react-datepicker";
 import moment from 'moment';
-import { TScheduleKind, TPlan } from '../type';
+import { TScheduleKind } from '../type';
 import { useAppDispatch, useAppSelector } from '../redux/hook'
-import { setIsShowDialog, getCalender, setNewPlan } from '../redux/calenderSlice'
+import { setIsShowDialog, getCalender, setNewPlan, updatePlan } from '../redux/calenderSlice'
+import { updateScheduleAPI } from '../api/schedule'
 import ColorIcon from './colorIcon';
 import LineThickness from './lineThickness';
 import Message from "./message"
@@ -54,7 +55,16 @@ const TaskCreate = () => {
         open: true
       })
     }
-    dispatch(setIsShowDialog(open))
+    updateScheduleAPI(newPlan).then((schedule) => {
+      dispatch(updatePlan(schedule.data))
+      dispatch(setNewPlan(schedule.data))
+      dispatch(setIsShowDialog(!isShowDialog))
+    }).catch(() => {
+      setError({
+        message: "Server Error.",
+        open: true
+      })
+    })
   }
   const handleStartDateChange = (date: moment.Moment) => {
     dispatch(setNewPlan({ ...newPlan, startDate: date.format("YYYY-MM-DD") }))

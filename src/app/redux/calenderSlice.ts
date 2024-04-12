@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import moment from 'moment';
 import { RootState } from './store';
 import { TPlan, TScheduleKind } from '../type';
+import { stat } from 'fs';
 const initialState: {
     date: string,
     kind: string,
@@ -59,7 +60,14 @@ export const CalenderSlice = createSlice({
             state.kind = action.payload
         },
         setPlan(state, action) {
-            state.plan = action.payload
+            const plan: TPlan[] = action.payload
+            state.plan = plan.sort((a, b) => moment(a.startDate).isBefore(moment(b.startDate)) ? -1 : 1)
+        },
+        updatePlan(state, action) {
+            state.plan = state.plan?.map((v: TPlan, i: number) => {
+                if (v._id === action.payload._id) return action.payload;
+                else return v;
+            })
         },
         setDateAndPlan(state, action) {
             state.date = action.payload.date
@@ -82,6 +90,7 @@ export const {
     setDate,
     setKind,
     setPlan,
+    updatePlan,
     setAction,
     setNewPlan,
     setDateAndPlan,

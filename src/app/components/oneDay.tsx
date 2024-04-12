@@ -1,10 +1,10 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { IconButton, Flex, Box, Popover } from '@radix-ui/themes'
 import moment from 'moment'
 
 import { useAppDispatch, useAppSelector } from '@/app/redux/hook';
-import { setDateAndPlan, getCalender } from '@/app/redux/calenderSlice';
+import { getCalender, setDate } from '@/app/redux/calenderSlice';
 
 import TOneDay, { TPlan } from '../type'
 import TaskShow from './taskShow'
@@ -119,25 +119,29 @@ const OneDay = (prop: TOneDay) => {
   const kind = useAppSelector(getCalender).kind;
   const { no, month, datesCnt, plan, width, color } = prop;
   const date = moment(prop.date);
-  const [sort_plan, setSort_Plan] = useState<TPlan[] | undefined>(undefined);
-
-  const handleIconButton = ({ date, plan }: { date: moment.Moment, plan: TPlan[] | undefined }) => {
-    dispatch(setDateAndPlan({ date, plan }));
+  const handleIconButton = (date: moment.Moment) => {
+    dispatch(setDate(date.format("YYYY-MM-DD")));
+    // dispatch(setDateAndPlan({ date: date.format("YYYY-MM-DD"), plan }))
   }
+
   let cornerL = null
   let cornerR = null
   let k = no;
   if (~~(no / 7) % 2) k = ~~(no / 7) * 7 + (6 - no % 7)
+
   if (kind == "month_1") {
     if (no == 0) {
       let pos = -width / 2;
-      let connerPlan = sort_plan?.map((v: TPlan, i: number, a: TPlan[]) => {
-        let _pos = pos;
-        for (let j = 0; j <= i; j++) {
-          if (moment(a[j].endDate).clone().weekday(6).isSameOrAfter(date, 'day') && moment(a[j].endDate).isSameOrAfter(moment(v.startDate), 'day')) {
-            _pos += v.width;
-          }
+      let _pos = pos;
+      let connerPlan = plan?.map((v: TPlan) => {
+        if (moment(v.endDate).clone().weekday(6).isSameOrAfter(date, 'day') && moment(v.endDate).isSameOrAfter(moment(v.startDate), 'day')) {
+          _pos += v.width;
         }
+        // for (let j = 0; j <= i; j++) {
+        //   if (moment(a[j].endDate).clone().weekday(6).isSameOrAfter(date, 'day') && moment(a[j].endDate).isSameOrAfter(moment(v.startDate), 'day')) {
+        //     _pos += v.width;
+        //   }
+        // }
         if (date.isBetween(moment(v.startDate), moment(v.endDate), 'day', "[)")) {
           return Conner({ no: 0, width: v.width, color: v.color, position: _pos - v.width / 2 })
         } else return null
@@ -151,12 +155,15 @@ const OneDay = (prop: TOneDay) => {
     } else if (datesCnt == no + 1) {
 
       let pos = -width / 2;
-      let connerPlan = sort_plan?.map((v: TPlan, i: number, a: TPlan[]) => {
-        let _pos = pos;
-        for (let j = 0; j <= i; j++) {
-          if (moment(a[j].endDate).clone().weekday(6).isSameOrAfter(date, 'day') && moment(a[j].endDate).isSameOrAfter(moment(v.startDate), 'day')) {
-            _pos += v.width;
-          }
+      let _pos = pos;
+      let connerPlan = plan?.map((v: TPlan) => {
+        // for (let j = 0; j <= i; j++) {
+        //   if (moment(a[j].endDate).clone().weekday(6).isSameOrAfter(date, 'day') && moment(a[j].endDate).isSameOrAfter(moment(v.startDate), 'day')) {
+        //     _pos += v.width;
+        //   }
+        // }
+        if (moment(v.endDate).clone().weekday(6).isSameOrAfter(date, 'day') && moment(v.endDate).isSameOrAfter(moment(v.startDate), 'day')) {
+          _pos += v.width;
         }
         if (date.isBetween(moment(v.startDate), moment(v.endDate), 'day', "[)")) {
           return Conner({ no: 1, width: v.width, color: v.color, position: _pos - v.width / 2 })
@@ -181,12 +188,15 @@ const OneDay = (prop: TOneDay) => {
 
     } else if (no % 14 == 13) {
       let pos = -width / 2;
-      let connerPlan = sort_plan?.map((v: TPlan, i: number, a: TPlan[]) => {
-        let _pos = pos;
-        for (let j = 0; j <= i; j++) {
-          if (moment(a[j].endDate).clone().weekday(6).isSameOrAfter(date, 'day') && moment(a[j].endDate).isSameOrAfter(moment(v.startDate), 'day')) {
-            _pos += v.width;
-          }
+      let _pos = pos;
+      let connerPlan = plan?.map((v: TPlan) => {
+        // for (let j = 0; j <= i; j++) {
+        //   if (moment(a[j].endDate).clone().weekday(6).isSameOrAfter(date, 'day') && moment(a[j].endDate).isSameOrAfter(moment(v.startDate), 'day')) {
+        //     _pos += v.width;
+        //   }
+        // }
+        if (moment(v.endDate).clone().weekday(6).isSameOrAfter(date, 'day') && moment(v.endDate).isSameOrAfter(moment(v.startDate), 'day')) {
+          _pos += v.width;
         }
         if (date.isBetween(moment(v.startDate), moment(v.endDate), 'day', "[)")) {
           return Conner({
@@ -201,13 +211,17 @@ const OneDay = (prop: TOneDay) => {
       }} > {Conner({ no: 3, width })}{connerPlan}</ Box>
     } else if (no % 14 == 0) {
       let pos = -width / 2;
-      let connerPlan = sort_plan?.map((v: TPlan, i: number, a: TPlan[]) => {
-        let _pos = pos;
-        for (let j = 0; j <= i; j++) {
-          if (moment(a[j].endDate).clone().weekday(6).isSameOrAfter(date, "day") && moment(a[j].endDate).isSameOrAfter(moment(v.startDate), "day")) {
-            _pos += v.width;
-          }
+      let _pos = pos;
+      let connerPlan = plan?.map((v: TPlan) => {
+        // for (let j = 0; j <= i; j++) {
+        //   if (moment(a[j].endDate).clone().weekday(6).isSameOrAfter(date, "day") && moment(a[j].endDate).isSameOrAfter(moment(v.startDate), "day")) {
+        //     _pos += v.width;
+        //   }
+        // }
+        if (moment(v.endDate).clone().weekday(6).isSameOrAfter(date, 'day') && moment(v.endDate).isSameOrAfter(moment(v.startDate), 'day')) {
+          _pos += v.width;
         }
+
         if (date.isBetween(moment(v.startDate), moment(v.endDate), 'day', "(]")) {
           return Conner({ no: 4, width: v.width, color: v.color, position: _pos - v.width / 2 })
         } else return <></>
@@ -219,12 +233,15 @@ const OneDay = (prop: TOneDay) => {
       }} > {Conner({ no: 4, width })}{connerPlan}</ Box>
     } else if (no % 14 == 6) {
       let pos = -width / 2;
-      let connerPlan = sort_plan?.map((v: TPlan, i: number, a: TPlan[]) => {
-        let _pos = pos;
-        for (let j = 0; j <= i; j++) {
-          if (moment(a[j].endDate).clone().weekday(6).isSameOrAfter(date, "day") && moment(a[j].endDate).isSameOrAfter(moment(v.startDate), "day")) {
-            _pos += v.width;
-          }
+      let _pos = pos;
+      let connerPlan = plan?.map((v: TPlan) => {
+        // for (let j = 0; j <= i; j++) {
+        //   if (moment(a[j].endDate).clone().weekday(6).isSameOrAfter(date, "day") && moment(a[j].endDate).isSameOrAfter(moment(v.startDate), "day")) {
+        //     _pos += v.width;
+        //   }
+        // }
+        if (moment(v.endDate).clone().weekday(6).isSameOrAfter(date, 'day') && moment(v.endDate).isSameOrAfter(moment(v.startDate), 'day')) {
+          _pos += v.width;
         }
         if (date.isBetween(moment(v.startDate), moment(v.endDate), 'day', "[)")) {
           return Conner({ no: 5, width: v.width, color: v.color, position: _pos - v.width / 2 })
@@ -238,12 +255,15 @@ const OneDay = (prop: TOneDay) => {
 
     } else if (no % 14 == 7) {
       let pos = -width / 2;
-      let connerPlan = sort_plan?.map((v: TPlan, i: number, a: TPlan[]) => {
-        let _pos = pos;
-        for (let j = 0; j <= i; j++) {
-          if (moment(a[j].endDate).clone().weekday(6).isSameOrAfter(date, "day") && moment(a[j].endDate).isSameOrAfter(moment(v.startDate), "day")) {
-            _pos += v.width;
-          }
+      let _pos = pos;
+      let connerPlan = plan?.map((v: TPlan) => {
+        // for (let j = 0; j <= i; j++) {
+        //   if (moment(a[j].endDate).clone().weekday(6).isSameOrAfter(date, "day") && moment(a[j].endDate).isSameOrAfter(moment(v.startDate), "day")) {
+        //     _pos += v.width;
+        //   }
+        // }
+        if (moment(v.endDate).clone().weekday(6).isSameOrAfter(date, 'day') && moment(v.endDate).isSameOrAfter(moment(v.startDate), 'day')) {
+          _pos += v.width;
         }
         if (date.isBetween(moment(v.startDate), moment(v.endDate), 'day', "(]")) {
           return Conner({ no: 6, width: v.width, color: v.color, position: _pos - v.width / 2 })
@@ -256,17 +276,22 @@ const OneDay = (prop: TOneDay) => {
       }} > {Conner({ no: 6, width })}{connerPlan}</ Box>
     }
   }
+
   let pos = -(width == undefined ? 1 : width / 2);
   const main_width = (width == undefined ? 1 : width / 2);
 
   let planDay = false;
-  const planBarL = sort_plan?.map((v: TPlan, i: number, a: TPlan[]) => {
-    let _pos = pos;
-    for (let j = 0; j <= i; j++) {
-      if (moment(a[j].endDate).clone().weekday(6).isSameOrAfter(date, "day") && moment(a[j].endDate).isSameOrAfter(moment(v.startDate), "day")) {
-        _pos += v.width;
-      }
+  let _pos = pos;
+  const planBarL = plan?.map((v: TPlan) => {
+    // for (let j = 0; j <= i; j++) {
+    //   if (moment(a[j].endDate).clone().weekday(6).isSameOrAfter(date, "day") && moment(a[j].endDate).isSameOrAfter(moment(v.startDate), "day")) {
+    //     _pos += v.width;
+    //   }
+    // }
+    if (moment(v.endDate).clone().weekday(6).isSameOrAfter(date, 'day') && moment(v.endDate).isSameOrAfter(moment(v.startDate), 'day')) {
+      _pos += v.width;
     }
+
     if (date.isSame(moment(v.startDate), "day") || date.isSame(moment(v.endDate), "day")) {
       planDay = true;
     }
@@ -299,14 +324,16 @@ const OneDay = (prop: TOneDay) => {
       return null;
     }
   });
-
   pos = -(width == undefined ? 1 : width / 2);
-  const planBarR = sort_plan?.map((v: TPlan, i: number, a: TPlan[]) => {
-    let _pos = pos;
-    for (let j = 0; j <= i; j++) {
-      if (moment(a[j].endDate).clone().weekday(6).isSameOrAfter(date, "day") && moment(a[j].endDate).isSameOrAfter(moment(v.startDate), "day")) {
-        _pos += v.width;
-      }
+  _pos = pos;
+  const planBarR = plan?.map((v: TPlan) => {
+    // for (let j = 0; j <= i; j++) {
+    //   if (moment(a[j].endDate).clone().weekday(6).isSameOrAfter(date, "day") && moment(a[j].endDate).isSameOrAfter(moment(v.startDate), "day")) {
+    //     _pos += v.width;
+    //   }
+    // }
+    if (moment(v.endDate).clone().weekday(6).isSameOrAfter(date, 'day') && moment(v.endDate).isSameOrAfter(moment(v.startDate), 'day')) {
+      _pos += v.width;
     }
     if (moment(v.startDate).isSame(moment(v.endDate), "day")) {
       return <></>;
@@ -335,18 +362,14 @@ const OneDay = (prop: TOneDay) => {
       return null;
     }
   });
-
   let dateColor = 'white';
   let buttonBorderColor: any = "gray";
   if (date.month() === month) buttonBorderColor = 'indigo'
   if (planDay) buttonBorderColor = "red"
   if (date.isSame(moment(), 'day')) {
     dateColor = 'coral';
-  } else if (sort_plan) {
   }
-  useEffect(() => {
-    setSort_Plan(plan?.sort((a, b) => moment(a.startDate).isBefore(moment(b.startDate)) ? -1 : 1))
-  }, [plan])
+
   return (
     <Flex align={'center'} position={'relative'}>
       <Popover.Root>
@@ -355,7 +378,7 @@ const OneDay = (prop: TOneDay) => {
             className={` ${dateColor} cursor-pointer border-2 !font-medium`}
             style={{ left: 'calc(50% - 20px)', backgroundColor: dateColor }}
             size="3" radius="full" variant="outline" color={buttonBorderColor} // highContrast={date.month() === month} 
-            onClick={e => handleIconButton({ date, plan: sort_plan })}
+            onClick={e => handleIconButton(date)}
           >
             {date.date()}
           </IconButton>

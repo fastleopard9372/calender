@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import moment from 'moment';
 import { Grid } from '@radix-ui/themes';
 import { useAppSelector, useAppDispatch } from '@/app/redux/hook';
-import { getCalender, getScheduleKind } from '@/app/redux/calenderSlice';
+import { getCalender, getScheduleKind, setDate, setPlan } from '@/app/redux/calenderSlice';
 import { getSchedulesAPI, getScheduleKindAPI } from '../api/schedule';
 import OneDay from '../components/oneDay';
 import { TPlan } from '../type';
@@ -83,7 +83,6 @@ const Calender = () => {
   const dispatch = useAppDispatch();
   const startDate = date.clone().startOf('month').startOf('week');
   const endDate = date.clone().endOf('month').endOf('week');
-  const [plan, setPlan] = useState<TPlan[] | undefined>(undefined)
   // const plan: TPlan[] = [
   //   {
   //     _id: "1", color: 'red', width: 2, startDate: "2024-03-29", endDate: "2024-04-16", title: "title1", demo: "This is my demo1", kind: '1', user: { id: '', username: '', email: '' },
@@ -114,9 +113,10 @@ const Calender = () => {
   // ]
   useEffect(() => {
     getSchedulesAPI({ startDate, endDate }).then((schedules: any) => {
-      setPlan(schedules.data);
+      dispatch(setPlan(schedules.data))
     })
   }, [calender_data.date, kind])
+
   useEffect(() => {
     getScheduleKindAPI().then((scheduleKind: any) => {
       dispatch(getScheduleKind(scheduleKind.data));
@@ -126,7 +126,7 @@ const Calender = () => {
     <>
       <Grid columns="1" gap="0" width="auto" className={"h-full min-h-[580px]"}>
         <Grid columns="1" gap="0" width="auto" className={kind == "week" ? "h-[80px]" : "h-[580px]"}>
-          <DatesOfMonth startDate={startDate} date={date} endDate={endDate} kind={kind} plan={plan} />
+          <DatesOfMonth startDate={startDate} date={date} endDate={endDate} kind={kind} plan={calender_data.plan} />
         </Grid>
       </Grid>
     </>
