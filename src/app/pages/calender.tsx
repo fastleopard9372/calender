@@ -124,8 +124,8 @@ const Calender = () => {
   }, [])
   return (
     <>
-      <Grid columns="1" gap="0" width="auto" className={"h-full min-h-[580px]"}>
-        <Grid columns="1" gap="0" width="auto" className={kind == "week" ? "h-[80px]" : "h-[580px]"}>
+      <Grid columns="1" gap="0" width="auto" className={"h-full"} style={{ height: 'calc(100vh - 100px)' }}>
+        <Grid columns="1" gap="0" width="auto" style={{ height: (kind == "week" ? "80px" : 'calc(100vh - 100px)') }}>
           <DatesOfMonth startDate={startDate} date={date} endDate={endDate} kind={kind} plan={calender_data.plan} />
         </Grid>
       </Grid>
