@@ -8,17 +8,21 @@ import { setDate, setKind, getCalender, setIsShowDialog, setAction, setNewPlan }
 const Header = () => {
   const dispatch = useAppDispatch();
   const date = moment(useAppSelector(getCalender).date);
-  const handleClickMonth = (kind: moment.unitOfTime.DurationConstructor, value: number) => {
-    dispatch(setDate(date.clone().add(value, kind).format("YYYY-MM-DD")))
+  const kind = useAppSelector(getCalender).kind;
+  const handleClickMove = (kd: moment.unitOfTime.DurationConstructor, value: number) => {
+    if (kind == "week")
+      dispatch(setDate(date.clone().add(value, 'weeks').format("YYYY-MM-DD")))
+    else
+      dispatch(setDate(date.clone().add(value, 'months').format("YYYY-MM-DD")))
   }
-  const handleClickMonthD = (value: number) => {
+  const handleClickMoveD = (value: number) => {
     dispatch(setDate(date.clone().month(value).format("YYYY-MM-DD")))
   }
   const handleClickYear = (year: number) => {
     dispatch(setDate(date.clone().year(year).format("YYYY-MM-DD")))
   }
   const handleClickToday = () => {
-    dispatch(setDate(moment(new Date()).format("MM-DD-YYYY")))
+    dispatch(setDate(moment(new Date()).format("YYYY-MM-DD")))
   }
   const handleClickKind = (m_kind: string) => {
     dispatch(setKind(m_kind));
@@ -53,11 +57,11 @@ const Header = () => {
             <Button variant="soft" onClick={handleClickToday} className='cursor-pointer' >
               Today
             </Button>
-            <IconButton className='cursor-pointer' radius="full" variant="soft" onClick={() => handleClickMonth("months", -1)}>
+            <IconButton className='cursor-pointer' radius="full" variant="soft" onClick={() => handleClickMove("months", -1)}>
               <ChevronLeftIcon width="18" height="18" />
             </IconButton>
             <IconButton className='cursor-pointer' radius="full" variant="soft">
-              <ChevronRightIcon width="18" height="18" onClick={() => handleClickMonth("months", 1)} />
+              <ChevronRightIcon width="18" height="18" onClick={() => handleClickMove("months", 1)} />
             </IconButton>
           </Flex>
           <DropdownMenu.Root>
@@ -70,7 +74,7 @@ const Header = () => {
             <DropdownMenu.Content className='max-h-[300px]'>
               {
                 Array(12).fill(0).map((v: number, i: number) => (
-                  <DropdownMenu.Item key={i} onClick={() => handleClickMonthD(i)}>
+                  <DropdownMenu.Item key={i} onClick={() => handleClickMoveD(i)}>
                     {moment().month(i).format("MMMM")}
                   </DropdownMenu.Item>
                 ))

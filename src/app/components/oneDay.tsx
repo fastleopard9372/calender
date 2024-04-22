@@ -1,13 +1,13 @@
 'use client'
 import React from 'react'
-import { IconButton, Flex, Box, Popover } from '@radix-ui/themes'
+import { IconButton, Flex, Box } from '@radix-ui/themes'
 import moment from 'moment'
 
 import { useAppDispatch, useAppSelector } from '@/app/redux/hook';
-import { getCalender, setDate } from '@/app/redux/calenderSlice';
+import { getCalender, setDate, setIsTaskShowDialog } from '@/app/redux/calenderSlice';
 
 import TOneDay, { TPlan } from '../type'
-import TaskShow from './taskShow'
+
 
 const Bar = ({ color, width, position }: { color: string; position: number; width?: number }) => {
 
@@ -117,10 +117,12 @@ const Conner = ({ no, width, color, position }: { no: number; width?: number; co
 const OneDay = (prop: TOneDay) => {
   const dispatch = useAppDispatch();
   const kind = useAppSelector(getCalender).kind;
+  const sel_date = useAppSelector(getCalender).date;
   const { no, month, datesCnt, plan, width, color } = prop;
   const date = moment(prop.date);
   const handleIconButton = (date: moment.Moment) => {
     dispatch(setDate(date.format("YYYY-MM-DD")));
+    dispatch(setIsTaskShowDialog(true))
     // dispatch(setDateAndPlan({ date: date.format("YYYY-MM-DD"), plan }))
   }
 
@@ -369,22 +371,29 @@ const OneDay = (prop: TOneDay) => {
   if (date.isSame(moment(), 'day')) {
     dateColor = 'coral';
   }
-
+  if (sel_date == prop.date) buttonBorderColor = 'cyan'
+  let style = {
+    borderRightColor: 'gray',
+    borderStyle: 'dashed',
+    borderWidth: 0,
+    borderRightWidth: 0
+  };
+  if (kind == "week") {
+    if (date.clone().endOf('week').isSame(date, 'day')) {
+      style.borderRightWidth = 1
+    }
+  }
   return (
-    <Flex align={'center'} position={'relative'}>
-      <Popover.Root>
-        <Popover.Trigger className={`!absolute !z-50  cursor-pointer`}>
-          <IconButton
-            className={` ${dateColor} cursor-pointer border-2 !font-medium`}
-            style={{ left: 'calc(50% - 20px)', backgroundColor: dateColor }}
-            size="3" radius="full" variant="outline" color={buttonBorderColor} // highContrast={date.month() === month} 
-            onClick={e => handleIconButton(date)}
-          >
-            {date.date()}
-          </IconButton>
-        </Popover.Trigger>
-        {<TaskShow />}
-      </Popover.Root>
+    <Flex align={'center'} position={'relative'} style={style}
+    >
+      <IconButton
+        className={` ${dateColor} cursor-pointer border-2 !font-medium !absolute !z-50`}
+        style={{ left: 'calc(50% - 20px)', backgroundColor: dateColor }}
+        size="3" radius="full" variant="outline" color={buttonBorderColor} // highContrast={date.month() === month} 
+        onClick={e => handleIconButton(date)}
+      >
+        {date.date()}
+      </IconButton>
       {cornerL}
       {
         cornerL == null &&

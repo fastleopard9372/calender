@@ -7,6 +7,7 @@ const initialState: {
     kind: string,
     plan: TPlan[] | undefined,
     isShowDialog: boolean,
+    isTaskShowDialog: boolean,
     scheduleKind: TScheduleKind[],
     colors: string[],
     thickness: number[],
@@ -18,6 +19,7 @@ const initialState: {
     kind: "month_1",
     plan: undefined,
     isShowDialog: false,
+    isTaskShowDialog: false,
     scheduleKind: [],
     colors: [
         "red", "green", "blue", "yellow", "orange", "purple", "pink", "teal", "brown", "gray", "cyan", "magenta", "indigo", "lime", "olive", "coral"],
@@ -85,6 +87,9 @@ export const CalenderSlice = createSlice({
         setIsShowDialog(state, action) {
             state.isShowDialog = action.payload
         },
+        setIsTaskShowDialog(state, action) {
+            state.isTaskShowDialog = action.payload
+        },
         addNewScheduleKind(state, action) {
             state.scheduleKind.push(action.payload)
         },
@@ -106,6 +111,7 @@ export const {
     setNewPlan,
     setDateAndPlan,
     setIsShowDialog,
+    setIsTaskShowDialog,
     addNewScheduleKind,
     getScheduleKind,
 } = CalenderSlice.actions;

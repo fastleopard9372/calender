@@ -64,7 +64,7 @@ const DatesOfMonth = (
       inner_item.push(<OneDay key={i} {
         ...{
           no: i,
-          date: date.clone().add(i, "days").format("YYYY-MM-DD"),
+          date: date.clone().add(i - 3, "days").format("YYYY-MM-DD"),
           month: date.clone().month(),
           datesCnt: 7,
           width: 2,

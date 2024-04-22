@@ -7,6 +7,7 @@ import Header from "@/app/layout/header";
 import { Animate } from 'react-simple-animate';
 import { ToastContainer } from 'react-toastify';
 import TaskCreate from "./components/taskCreate";
+import TaskShow from './components/taskShow';
 import { getCalender, setDate } from "./redux/calenderSlice";
 import { useAppSelector, useAppDispatch } from "./redux/hook";
 import 'react-toastify/dist/ReactToastify.css';
@@ -43,6 +44,7 @@ export default function Home() {
     <div className="container mx-auto px-4" onWheel={handleWheel}>
       <Header />
       <TaskCreate />
+      <TaskShow />
       {/* <div className='relative overflow-hidden'>
         <Animate
           play={false}

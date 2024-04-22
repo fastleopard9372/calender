@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { Dialog, Button, Flex, TextArea, TextField, Select, RadioCards } from '@radix-ui/themes'
-import DatePicker from "react-datepicker";
+import Datepicker from "react-tailwindcss-datepicker";
 import moment from 'moment';
 import { toast } from 'react-toastify';
 import { TPlan, TScheduleKind } from '../type';
@@ -38,13 +38,13 @@ const TaskCreate = () => {
       })
       return
     }
-    if (data.kind == "-1" || data.kind == "") {
-      setError({
-        message: "Kind must be selected",
-        open: true
-      })
-      return
-    }
+    // if (data.kind == "-1" || data.kind == "") {
+    //   setError({
+    //     message: "Kind must be selected",
+    //     open: true
+    //   })
+    //   return
+    // }
     if (data.title == "") {
       setError({
         message: "Title must be required",
@@ -83,12 +83,19 @@ const TaskCreate = () => {
       })
     }
   }
-  const handleStartDateChange = (date: moment.Moment) => {
-    setData({ ...data, startDate: date.format("YYYY-MM-DD") })
+  const handleValueChange = (newValue: any) => {
+    setData({
+      ...data,
+      startDate: moment(newValue.startDate).format("YYYY-MM-DD"),
+      endDate: moment(newValue.endDate).format("YYYY-MM-DD")
+    })
   }
-  const handleEndDateChange = (date: moment.Moment) => {
-    setData({ ...data, endDate: date.format("YYYY-MM-DD") })
-  }
+  // const handleStartDateChange = (date: moment.Moment) => {
+  //   setData({ ...data, startDate: date.format("YYYY-MM-DD") })
+  // }
+  // const handleEndDateChange = (date: moment.Moment) => {
+  //   setData({ ...data, endDate: date.format("YYYY-MM-DD") })
+  // }
   const handleKind = (value: string) => {
     setData({ ...data, kind: value })
   }
@@ -98,15 +105,15 @@ const TaskCreate = () => {
   }
 
   useEffect(() => {
-    console.log("new plan")
-    if (data.kind == "-1") {
-      setError({
-        message: "Kind must be started",
-        open: true
-      })
-    } else {
-      setError({ message: "", open: false })
-    }
+    // console.log("new plan")
+    // if (data.kind == "-1") {
+    //   setError({
+    //     message: "Kind must be started",
+    //     open: true
+    //   })
+    // } else {
+    //   setError({ message: "", open: false })
+    // }
     if (moment(newPlan.endDate).isBefore(moment(newPlan.startDate))) {
       setError({
         message: "End date must be after start date",
@@ -119,40 +126,33 @@ const TaskCreate = () => {
   }, [newPlan])
   return (
     <Dialog.Root open={isShowDialog} onOpenChange={handleOpenChange}>
-      <Dialog.Content>
+      <Dialog.Content style={{ overflow: 'unset' }}>
         <Dialog.Title>{action} Schedule</Dialog.Title>
         {error.open && <Message message={error.message} />}
         <Dialog.Description className='pb-2'>
           <Flex direction="column" gap="3">
-            <Flex direction="row" gap="3">
-              <Flex direction="column">
-                Start Date:
-                <div>
-                  <DatePicker
+            <Flex direction="column">
+              Date:
+              <div>
+                {/* <DatePicker
                     selected={moment(data.startDate).toDate()}
                     onChange={(startDate: Date) => handleStartDateChange(moment(startDate))}
                     selectsStart
                     startDate={moment(data.startDate).toDate()}
                     endDate={moment(data.endDate).toDate()}
-                  />
-                </div>
-                {/* <Text
-                data-date-format="DD MMMM YYYY" */}
-              </Flex>
-              <Flex direction="column">
-                End Date:
-                <div>
-                  <DatePicker
-                    selected={moment(data.endDate).toDate()}
-                    onChange={(endDate: Date) => handleEndDateChange(moment(endDate))}
-                    selectsEnd
-                    startDate={moment(data.startDate).toDate()}
-                    endDate={moment(data.endDate).toDate()}
-                    minDate={moment(data.startDate).toDate()}
-                  />
-                </div>
-              </Flex>
-              <Flex direction="column" className='w-full'>
+                  /> */}
+                <Datepicker
+                  primaryColor='blue'
+                  containerClassName={'relative border rounded-[4px]'}
+                  inputClassName={'py-1 px-2 rounded-[4px] w-full '}
+                  value={{
+                    startDate: moment(data.startDate).toDate(),
+                    endDate: moment(data.endDate).toDate()
+                  }}
+                  onChange={handleValueChange} />
+              </div>
+
+              {/* <Flex direction="column" className='w-full'>
                 <div >Type:</div>
                 <div className='w-full'>
                   <Select.Root defaultValue={data.kind} value={data.kind} onValueChange={handleKind}>
@@ -167,7 +167,7 @@ const TaskCreate = () => {
                     </Select.Content>
                   </Select.Root>
                 </div>
-              </Flex>
+              </Flex> */}
             </Flex>
             <Flex direction="column">
               <div>Title:</div>
